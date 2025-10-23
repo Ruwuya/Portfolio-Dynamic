@@ -1,104 +1,261 @@
-.App {
-  text-align: center;
+:root {
+  --color-bg-dark: #222831;    /* Navbar / deepest tone */
+  --color-bg-medium: #393E46;  /* Cards / secondary sections */
+  --color-accent: #948979;     /* Buttons / subtle highlights */
+  --color-bg-light: #DFD0B8;   /* Page background */
+  --color-text-light: #DFD0B8; /* Text on dark surfaces */
+  --color-text-dark: #222831;  /* Text on light surfaces */
+  --color-text-lighter: #E8DEC6; /* a hint brighter than DFD0B8 */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* === General page === */
+body {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-dark);
+  font-family: "Segoe UI", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* === Projects page container === */
+.projects-container {
+  padding: 20px;
+  color: var(--color-text-light);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* === Project cards === */
+.project-card {
+  background-color: var(--color-bg-medium);
+  border: 1px solid var(--color-accent);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.navbar {
-  display: flex;
-  justify-content: center;
-  background: #1e3a8a;
-  padding: 10px 0;
-  gap: 30px;
-}
-
-.navbar a {
-  color: white;
+/* === Links inside cards === */
+.project-card a {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background-color: var(--color-accent);
+  color: var(--color-text-dark);
   text-decoration: none;
+  border-radius: 6px;
   font-weight: 500;
-  transition: color 0.2s;
+  transition: 0.2s ease;
 }
 
-.navbar a:hover {
-  color: #93c5fd;
+.project-card a:hover {
+  background-color: var(--color-bg-light);
 }
 
-/* Contact form styling */
-form {
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
-  margin: 20px auto;
-  gap: 10px;
+/* === Page headers (like "My Projects") === */
+.projects-container h1 {
+  color: var(--color-bg-dark);
+  font-weight: 700;
+  font-size: 2rem;
 }
 
-input, textarea {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-button {
-  padding: 10px;
-  border: none;
-  background-color: #2563eb;
-  color: white;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #1d4ed8;
-}
+/* === About section === */
 .about-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  line-height: 1.7;
+  padding: 20px;
+  color: var(--color-text-dark); /* Dark text on beige background */
 }
 
 .about-container h1 {
+  color: var(--color-bg-dark);
+  font-weight: 700;
   font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #1e293b;
+  margin-bottom: 20px;
 }
 
-.about-container p {
-  margin-bottom: 1.2rem;
-  color: #334155;
+/* === Reuse your Projects card style but lighter === */
+.about-card {
+  background-color: var(--color-bg-medium);
+  color: var(--color-text-light);
+  border: 1px solid var(--color-accent);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
+.about-card a {
+  color: var(--color-bg-light);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.about-card a:hover {
+  color: var(--color-accent);
+}
+
+.about-card h2 {
+  color: var(--color-bg-light);
+}
+
+/* ------------------------------ */
+/* HOME PAGE LAYOUT & STYLES */
+/* ------------------------------ */
+
+.home-container {
+  padding: 20px;
+  color: var(--color-text-dark);
+}
+
+/* Page title */
+.home-title {
+  color: var(--color-bg-dark);
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 25px;
+}
+
+/* === GRID LAYOUT === */
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+/* Make the intro card take up both columns on large screens */
+.intro-card {
+  grid-column: span 2;
+}
+
+/* Responsive: stack everything on small screens */
+@media (max-width: 850px) {
+  .intro-card {
+    grid-column: span 1;
+  }
+}
+
+/* === CARD BOXES === */
+.home-card {
+  background-color: var(--color-bg-medium);
+  color: var(--color-text-light);
+  border: 1px solid var(--color-accent);
+  border-radius: 8px;
+  padding: 20px;
+  min-height: 200px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Subtle lift on hover */
+.home-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Card titles */
+.home-card h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+/* === BUTTONS === */
+.home-buttons a {
+  display: inline-block;
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 8px 14px;
+  background-color: var(--color-accent);
+  color: var(--color-text-dark);
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.home-buttons a:hover {
+  background-color: var(--color-bg-light);
+  color: var(--color-bg-dark);
+}
+
+/* === SKILLS === */
+.home-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.home-skills span {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-light);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+/* === SOCIAL LINKS === */
+.home-socials a {
+  color: var(--color-text-light);
+  text-decoration: none;
+  font-weight: 600;
+  margin-right: 12px;
+  transition: color 0.2s ease;
+}
+
+.home-socials a:hover {
+  color: var(--color-accent);
+}
+
+/* ------------------------------ */
+/* NAVBAR STYLES */
+/* ------------------------------ */
+
+.navbar {
+  background-color: var(--color-bg-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 40px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text-light);
+  text-decoration: none;
+  letter-spacing: 0.5px;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 25px;
+}
+
+.navbar-links a {
+  color: var(--color-text-light);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.navbar-links a:hover {
+  color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.lang-button {
+  background-color: var(--color-accent);
+  border: none;
+  border-radius: 6px;
+  color: var(--color-text-dark);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.lang-button:hover {
+  background-color: var(--color-bg-light);
+  transform: translateY(-2px);
+}

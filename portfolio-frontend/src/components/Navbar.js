@@ -1,49 +1,33 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Navbar({ language, setLanguage }) {
   const toggleLanguage = () => {
-    setLanguage(prev => (prev === 'en' ? 'da' : 'en'));
+    setLanguage((prev) => (prev === "en" ? "da" : "en"));
   };
 
   return (
-    <nav
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#1e293b',
-        padding: '10px 20px',
-        color: 'white',
-      }}
-    >
-      <div style={{ display: 'flex', gap: '20px' }}>
-        <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
-          {language === 'en' ? 'Home' : 'Forside'}
-        </Link>
-        <Link to="/about" style={{ color: 'white', textDecoration: 'none' }}>
-          {language === 'en' ? 'About' : 'Om mig'}
-        </Link>
-        <Link to="/projects" style={{ color: 'white', textDecoration: 'none' }}>
-          {language === 'en' ? 'Projects' : 'Projekter'}
+    <nav className="navbar">
+      {/* Left side: site title / logo */}
+      <div className="navbar-left">
+        <Link to="/" className="navbar-logo">
+          {language === "en" ? "Rene Hinrichsen" : "Rene Hinrichsen"}
         </Link>
       </div>
 
-      <button
-        onClick={toggleLanguage}
-        title={language === 'en' ? 'Skift til dansk' : 'Switch to English'}
-        style={{
-          backgroundColor: '#2563eb',
-          border: 'none',
-          borderRadius: '6px',
-          color: 'white',
-          padding: '6px 12px',
-          cursor: 'pointer',
-          fontWeight: 500,
-        }}
-      >
-        {language === 'en' ? '🇩🇰 Dansk' : '🇬🇧 English'}
-      </button>
+      {/* Center: navigation links */}
+      <div className="navbar-links">
+        <Link to="/">{language === "en" ? "Home" : "Forside"}</Link>
+        <Link to="/about">{language === "en" ? "About" : "Om Mig"}</Link>
+        <Link to="/projects">{language === "en" ? "Projects" : "Projekter"}</Link>
+      </div>
+
+      {/* Right side: language button */}
+      <div className="navbar-right">
+        <button onClick={toggleLanguage} className="lang-button">
+          {language === "en" ? "🇩🇰 Dansk" : "🇬🇧 English"}
+        </button>
+      </div>
     </nav>
   );
 }
