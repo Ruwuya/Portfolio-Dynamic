@@ -1,15 +1,14 @@
-import axios from 'axios';
+import axios from "axios";
 
-// Connects to PHP backend
+// Use localhost instead of .test (since you verified it works)
+const BASE_URL = "http://localhost/portfolio-backend/api";
 
-const BASE_URL = "http://portfolio-backend.api";
-
-export const getProjects = async () => {
-    const response = await axios.get(`${BASE_URL}/projects.php`);
+export async function getProjects() {
+  try {
+    const response = await axios.get(`${BASE_URL}/getProjects.php`);
     return response.data;
-};
-
-export const sendMessage = async (formData) => {
-    const response = await axios.post(`${BASE_URL}/addMessage.php`, formData);
-    return response.data;
-};
+  } catch (error) {
+    console.error("Axios Network Error:", error);
+    return [];
+  }
+}

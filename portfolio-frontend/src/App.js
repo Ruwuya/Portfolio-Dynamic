@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { getProjects } from "./api/api";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Projects from "./pages/Projects";
 
-// Renders the frontend of the portfolio application
 function App() {
-  const [projects, setProjects] = useState([]);
-
-  useEffect(() => {
-    getProjects().then((data) => setProjects(data));
-  }, []);
+  // language state to manage current language selection
+  const [language, setLanguage] = useState("en");
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>My Portfolio</h1>
-      <ul>
-        {projects.map((p) => (
-          <li key={p.id}>
-            <strong>{p.title}</strong> - {p.description}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Router>
+      {/* Pass language + setter down to Navbar */}
+      <Navbar language={language} setLanguage={setLanguage} />
+
+      {/* Pass the language down to each page */}
+      <Routes>
+        <Route path="/" element={<Home language={language} />} />
+        <Route path="/about" element={<About language={language} />} />
+        <Route path="/projects" element={<Projects language={language} />} />
+      </Routes>
+    </Router>
   );
 }
 
