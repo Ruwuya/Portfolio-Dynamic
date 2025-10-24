@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// Use localhost instead of .test (since you verified it works)
+// Use localhost instead of .test
 const BASE_URL = "http://localhost/portfolio-backend/api";
 
 export async function getProjects() {

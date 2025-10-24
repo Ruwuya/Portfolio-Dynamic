@@ -86,12 +86,12 @@ export default function About({ language }) {
             {language === 'en' ? 'Contact Information' : 'Kontaktinformation'}
           </h2>
           <p>
-            <strong>{language === 'en' ? 'Email:' : 'E-mail:'}</strong> —
+            <strong>{language === 'en' ? 'Email:' : 'E-mail:'}</strong>{' '}
             <em>renehinrichsen@outlook.com</em>
           </p>
           <p>
           <strong>GitHub:</strong>{' '}
-          <a href="https://github.com/Ruwuya" target="_blank" rel="noreferrer">github.com/YourGitHubUsername</a>
+          <a href="https://github.com/Ruwuya" target="_blank" rel="noreferrer">github.com/Ruwuya</a>
         </p>
         <p>
           <strong>LinkedIn:</strong>{' '}

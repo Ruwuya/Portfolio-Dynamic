@@ -8,7 +8,6 @@ export default function Projects({ language }) {
     getProjects().then((data) => setProjects(data));
   }, []);
 
-  // Translations for UI text
   const translations = {
     en: {
       title: "My Projects",
@@ -35,19 +34,19 @@ export default function Projects({ language }) {
       {projects.length === 0 ? (
         <p>{t.none}</p>
       ) : (
-        projects.map((p) => (
-          <div className="project-card" key={p.id}>
-            <p>
-              <strong>{t.name}:</strong> {p.title}
-            </p>
-            <p>
-              <strong>{t.description}:</strong> {p.description}
-            </p>
-            <a href={p.github_link} target="_blank" rel="noreferrer">
-              {t.view}
-            </a>
-          </div>
-        ))
+        <div className="projects-grid">
+          {projects.map((p) => (
+            <div className="project-card" key={p.id}>
+              <p>
+                <strong>{t.name}:</strong> {p.title}
+              </p>
+              <p>
+                <strong>{t.description}:</strong> {p.description}
+              </p>
+              <a href={p.github_link} target="_blank" rel="noreferrer">{t.view}</a>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
