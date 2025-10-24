@@ -67,23 +67,13 @@ export default function About({ language }) {
           {language === 'en' ? (
             <>
               If you'd like to see my CV in PDF format, please feel free to{' '}
-              <a
-                href="http://localhost/portfolio-backend/uploads/CV_-_Rene_Hinrichsen_EN.pdf"
-                download
-              >
-                download it here
-              </a>
+              <a href="http://localhost/portfolio-backend/uploads/CV_-_Rene_Hinrichsen_EN.pdf" download>download it here</a>
               .
             </>
           ) : (
             <>
               Hvis du gerne vil se mit CV i PDF-format, kan du{' '}
-              <a
-                href="http://localhost/portfolio-backend/uploads/CV_-_Rene_Hinrichsen_DA.pdf"
-                download
-              >
-                downloade det her
-              </a>
+              <a href="http://localhost/portfolio-backend/uploads/CV_-_Rene_Hinrichsen_DA.pdf" download>downloade det her</a>
               .
             </>
           )}
@@ -97,36 +87,17 @@ export default function About({ language }) {
           </h2>
           <p>
             <strong>{language === 'en' ? 'Email:' : 'E-mail:'}</strong> —
-            <em> (you can add your email here later)</em>
+            <em>renehinrichsen@outlook.com</em>
           </p>
-        </div>
-      </div>
-
-      <div className="about-contact">
-        <h2>{language === 'en' ? 'Contact Information' : 'Kontaktinformation'}</h2>
-        <p>
-          <strong>Email:</strong> you@example.com
-        </p>
-        <p>
+          <p>
           <strong>GitHub:</strong>{' '}
-          <a
-            href="https://github.com/YourGitHubUsername"
-            target="_blank"
-            rel="noreferrer"
-          >
-            github.com/YourGitHubUsername
-          </a>
+          <a href="https://github.com/Ruwuya" target="_blank" rel="noreferrer">github.com/YourGitHubUsername</a>
         </p>
         <p>
           <strong>LinkedIn:</strong>{' '}
-          <a
-            href="https://www.linkedin.com/in/YourLinkedInProfile/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            linkedin.com/in/YourLinkedInProfile
-          </a>
+          <a href="https://www.linkedin.com/in/rene-hinrichsen/" target="_blank" rel="noreferrer">linkedin.com/in/rene-hinrichsen</a>
         </p>
+        </div>
       </div>
     </div>
   );
