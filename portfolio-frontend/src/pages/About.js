@@ -99,6 +99,65 @@ export default function About({ language }) {
         </p>
         </div>
       </div>
+        {/* Grades / Education Results */}
+        <div className="grades-section">
+          <h2>{language === "en" ? "Grades Overview" : "Karakteroversigt"}</h2>
+
+          <table className="grades-table">
+            <thead>
+              <tr>
+                <th>{language === "en" ? "Subject & Level" : "Fag og Niveau"}</th>
+                <th>{language === "en" ? "Grade" : "Standpunktskarakter"}</th>
+                <th>{language === "en" ? "Exam Grade" : "Prøvekarakter"}</th>
+                <th>{language === "en" ? "Notes" : "Særlige Oplysninger"}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{language === "en" ? "Client-side Programming, Advanced" : "Clientsideprogrammering, Avanceret"}</td>
+                <td>12 (A)</td>
+                <td>-</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>{language === "en" ? "Core Applications, Intermediate" : "Core Applications, Rutineret"}</td>
+                <td>{language === "en" ? "Passed" : "Bestået"}</td>
+                <td>-</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>{language === "en" ? "Database Programming, Advanced" : "Databaseprogrammering, Avanceret"}</td>
+                <td>12 (A)</td>
+                <td>-</td>
+                <td>{language === "en" ? "Partial grade" : "Delkarakter"}</td>
+              </tr>
+              <tr>
+                <td>{language === "en" ? "Fundamental Programming, Advanced" : "Grundlæggende programmering, Avanceret"}</td>
+                <td>12 (A)</td>
+                <td>-</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>{language === "en" ? "Object-Oriented Programming, Advanced" : "Objektorienteret programmering, Avanceret"}</td>
+                <td>12 (A)</td>
+                <td>-</td>
+                <td>{language === "en" ? "Partial grade" : "Delkarakter"}</td>
+              </tr>
+              <tr>
+                <td>{language === "en" ? "Programming Methodology, Advanced" : "Programmeringsmetodik, Avanceret"}</td>
+                <td>12 (A)</td>
+                <td>-</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>{language === "en" ? "Server Technology - Database Server, Advanced" : "Serverteknologi - Databaseserver, Avanceret"}</td>
+                <td>12 (A)</td>
+                <td>-</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
     </div>
   );
 }

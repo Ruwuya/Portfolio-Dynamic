@@ -116,6 +116,64 @@ body {
 }
 
 /* ------------------------------ */
+/* GRADES TABLE STYLES */
+/* ------------------------------ */
+
+.grades-section {
+  margin-top: 40px;
+  background-color: var(--color-bg-medium);
+  color: var(--color-text-light);
+  border: 1px solid var(--color-accent);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.grades-section h2 {
+  color: var(--color-bg-light);
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+  border-bottom: 1px solid var(--color-accent);
+  padding-bottom: 6px;
+}
+
+/* Table layout */
+.grades-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.grades-table th,
+.grades-table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--color-accent);
+}
+
+.grades-table th {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-light);
+  font-weight: 700;
+}
+
+.grades-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .grades-table th,
+  .grades-table td {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .grades-section h2 {
+    font-size: 1.2rem;
+  }
+}
+
+/* ------------------------------ */
 /* HOME PAGE LAYOUT & STYLES */
 /* ------------------------------ */
 
@@ -199,6 +257,9 @@ body {
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 15px;
+  justify-content: center; /* centers horizontally */
+  align-items: center;      /* centers vertically */
+  text-align: center;
 }
 
 .home-skills span {
