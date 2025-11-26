@@ -1,0 +1,60 @@
+# ==========================================
+# Secure PHP API (portfolio-backend/.htaccess)
+# ==========================================
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Force HTTPS for all API requests
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Prevent direct browsing of backend folders
+  Options -Indexes
+</IfModule>
+
+
+# ==========================================
+#  Security Headers
+# ==========================================
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "DENY"
+  Header set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+
+# ==========================================
+#  MIME Types & Compression
+# ==========================================
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/json text/plain text/html
+</IfModule>
+
+
+# ==========================================
+#  Block Access to Sensitive Files
+# ==========================================
+
+# Deny direct access to config or database files
+<FilesMatch "(^\.|config\.php|db\.php|composer\.json|composer\.lock)">
+  Require all denied
+</FilesMatch>
+
+# Deny access to .env or hidden files (if any)
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+
+# ==========================================
+#  Allow only PHP and JSON responses
+# ==========================================
+
+<FilesMatch "\.(php|json)$">
+  Require all granted
+</FilesMatch>
