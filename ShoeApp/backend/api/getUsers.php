@@ -1,18 +1,21 @@
-<?
+<?php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Content-Type: application/json");
+header("Access-Control-Allow-Methods: GET, OPTIONS");
+header("Content-Type: application/json; charset=utf-8");
 
-include_once '../www/ShoeApp/shoeapp-backend/db.php';
+require_once __DIR__ . '/../db.php';
 
 $sql = "SELECT * FROM users";
 $result = $conn->query($sql);
 
 $users = [];
-while ($row = $result->fetch_assoc()){
-    $users[] = $row;
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $users[] = $row;
+    }
 }
 
-echo json_encode($users)
+echo json_encode($users);
+
 ?>
