@@ -1,6 +1,5 @@
 import { Routes, Route, NavLink } from "react-router-dom";
 import Home from "./pages/Home.jsx";
-import AddUserPage from "./pages/AddUserPage.jsx";
 import UserListPage from "./pages/UserListPage.jsx";
 import ChartPage from "./pages/ChartPage.jsx";
 import "./App.css";
@@ -46,7 +45,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/users" element={<UserListPage />} />
-          <Route path="/add" element={<AddUserPage />} />
           <Route path="/chart" element={<ChartPage />} />
         </Routes>
       </main>

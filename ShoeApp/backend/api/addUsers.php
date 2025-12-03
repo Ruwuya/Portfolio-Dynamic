@@ -1,38 +1,42 @@
-<?
-header("Access-Control-Allow-Origin: *");
+<?php
+
+// ===== CORS HEADERS =====
+header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Content-Type: application/json; charset=utf-8");
 
-// Handle preflight OPTIONS request and exit early
+// Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    // Just send the headers above and stop here
-    http_response_code(204); // No Content is fine
+    http_response_code(204);
+    exit;
+}
+
+// Only allow POST for real work
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode([
+        "status"  => "error",
+        "message" => "Method not allowed. Use POST."
+    ]);
     exit;
 }
 
 require_once __DIR__ . '/../db.php';
 
-// Read JSON body
-$input = file_get_contents("php://input");
-$data = json_decode($input, true);
-
-if (!$data) {
-    echo json_encode(["status" => "error", "message" => "Invalid JSON"]);
+// Read raw body
+$raw = file_get_contents("php://input");
+if (!$raw) {
+    http_response_code(400);
+    echo json_encode([
+        "status"  => "error",
+        "message" => "Missing request body"
+    ]);
     exit;
 }
 
-$first = $conn->real_escape_string($data["first_name"]);
-$last  = $conn->real_escape_string($data["last_name"]);
-$age   = (int)$data["age"];
-$email = $conn->real_escape_string($data["email"]);
-$size  = (int)$data["shoesize_id"];
-
-// Read raw JSON body
-$raw = file_get_contents("php://input");
+// Decode JSON
 $data = json_decode($raw, true);
-
-// Basic validation of JSON
 if (!is_array($data)) {
     http_response_code(400);
     echo json_encode([
@@ -42,15 +46,14 @@ if (!is_array($data)) {
     exit;
 }
 
-// Extract & sanitize fields
-$first = $conn->real_escape_string($data["first_name"] ?? "");
-$last  = $conn->real_escape_string($data["last_name"] ?? "");
-$age   = (int)($data["age"] ?? 0);
-$email = $conn->real_escape_string($data["email"] ?? "");
-$size  = (int)($data["shoesize_id"] ?? 0);
+// Extract & very basic validate
+$first = trim($data["first_name"] ?? "");
+$last  = trim($data["last_name"] ?? "");
+$age   = isset($data["age"]) ? (int)$data["age"] : null;
+$email = trim($data["email"] ?? "");
+$size  = isset($data["shoesize_id"]) ? (int)$data["shoesize_id"] : null;
 
-// (You can add more validation here: required fields, ranges, etc.)
-if ($first === "" || $last === "" || $age <= 0 || $email === "" || $size <= 0) {
+if ($first === "" || $last === "" || !$age || $email === "" || !$size) {
     http_response_code(400);
     echo json_encode([
         "status"  => "error",
@@ -59,24 +62,28 @@ if ($first === "" || $last === "" || $age <= 0 || $email === "" || $size <= 0) {
     exit;
 }
 
-// Insert into DB
+// Escape + build SQL
+$firstEsc = $conn->real_escape_string($first);
+$lastEsc  = $conn->real_escape_string($last);
+$emailEsc = $conn->real_escape_string($email);
+
 $sql = "
-    SELECT CONCAT(u.first_name, ' ', u.last_name) AS Name,
-    u.age AS Age,
-    s.shoe_size AS ShoeSize
-    FROM users u
-    JOIN shoesizes s ON u.shoesize_id = s.id;
+    INSERT INTO users (first_name, last_name, age, email, shoesize_id)
+    VALUES (
+        '$firstEsc',
+        '$lastEsc',
+        $age,
+        '$emailEsc',
+        $size
+    )
 ";
 
-$result = $conn -> query($sql);
-
-$rows = [];
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $rows[] = $row;
-    }
+if ($conn->query($sql)) {
+    echo json_encode(["status" => "success"]);
+} else {
+    http_response_code(500);
+    echo json_encode([
+        "status"  => "error",
+        "message" => $conn->error
+    ]);
 }
-
-echo json_encode($rows);
-
-?>
