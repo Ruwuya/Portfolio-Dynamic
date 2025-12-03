@@ -6,7 +6,7 @@ header("Content-Type: application/json; charset=utf-8");
 
 require_once __DIR__ . '/../db.php';
 
-$sql = "SELECT * FROM users";
+$sql = "SELECT Name, Age, Email, ShoeSize FROM v_users_shoesize";
 $result = $conn->query($sql);
 
 $users = [];
@@ -17,5 +17,4 @@ if ($result) {
 }
 
 echo json_encode($users);
-
 ?>

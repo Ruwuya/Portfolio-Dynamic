@@ -1,27 +1,62 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import AddUserPage from "./pages/AddUserPage.jsx";
 import UserListPage from "./pages/UserListPage.jsx";
 import ChartPage from "./pages/ChartPage.jsx";
+import "./App.css";
 
 function App() {
   return (
-    <div style={{ padding: "1rem" }}>
-      <h1>ShoeApp</h1>
+    <div className="app-shell">
+      <header className="app-header">
+        <nav className="nav-tabs">
+          {/* Navigation bar */}
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              "nav-tab" + (isActive ? " nav-tab--active" : "")
+            }
+          >
+            Home
+          </NavLink>
 
-      <nav style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-        <Link to="/">Home</Link>
-        <Link to="/add">Add user</Link>
-        <Link to="/users">User list</Link>
-        <Link to="/chart">Shoe size chart</Link>
-      </nav>
+          <NavLink
+            to="/users"
+            className={({ isActive }) =>
+              "nav-tab" + (isActive ? " nav-tab--active" : "")
+            }
+          >
+            Users
+          </NavLink>
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/add" element={<AddUserPage />} />
-        <Route path="/users" element={<UserListPage />} />
-        <Route path="/chart" element={<ChartPage />} />
-      </Routes>
+          <NavLink
+            to="/chart"
+            className={({ isActive }) =>
+              "nav-tab" + (isActive ? " nav-tab--active" : "")
+            }
+          >
+            Chart
+          </NavLink>
+        </nav>
+      </header>
+
+      {/* Handles routing */}
+      <main className="page-container">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/users" element={<UserListPage />} />
+          <Route path="/add" element={<AddUserPage />} />
+          <Route path="/chart" element={<ChartPage />} />
+        </Routes>
+      </main>
+
+      {/* Footer */}
+      <footer className="app-footer">
+        <span>Rene Hinrichsen</span>
+        <span>2025</span>
+        <span>Shoe Application Project</span>
+      </footer>
     </div>
   );
 }
