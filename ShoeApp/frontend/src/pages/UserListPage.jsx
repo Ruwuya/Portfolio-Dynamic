@@ -3,7 +3,9 @@ import { API_BASE } from "../config";
 
 export default function UserListPage() {
   const [users, setUsers] = useState([]);
+  const [shoeSizes, setShoeSizes] = useState([]);
 
+  // Load users
   useEffect(() => {
     async function loadUsers() {
       try {
@@ -14,11 +16,24 @@ export default function UserListPage() {
         console.error("Failed to load users", err);
       }
     }
-
     loadUsers();
   }, []);
 
-  // Very simple add-user form; you can expand/validate later
+  // Load shoe sizes
+  useEffect(() => {
+    async function loadSizes() {
+      try {
+        const res = await fetch(`${API_BASE}/getShoeSizes.php`);
+        const data = await res.json();   // <- expects an array
+        setShoeSizes(data);
+      } catch (err) {
+        console.error("Failed to load shoe sizes", err);
+      }
+    }
+    loadSizes();
+  }, []);
+
+  // --- ADD USER FORM STATE ---
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
@@ -43,10 +58,10 @@ export default function UserListPage() {
       });
 
       const data = await res.json();
-      console.log(data);
+      console.log("addUsers response:", data);
 
-      // reload user list on success
       if (data.status === "success" || data.success) {
+        // reload users
         const resUsers = await fetch(`${API_BASE}/getUsers.php`);
         const usersData = await resUsers.json();
         setUsers(usersData);
@@ -90,8 +105,8 @@ export default function UserListPage() {
                 <p>No users yet.</p>
               ) : (
                 users.map((u) => (
-                  <div className="users-list-item">
-                  <strong>{u.Name}</strong>
+                  <div key={u.Email} className="users-list-item">
+                    <strong>{u.Name}</strong>
                     <div className="users-list-meta">
                       <span>Age: {u.Age}</span>
                       <span> Email: {u.Email}</span>
@@ -166,12 +181,11 @@ export default function UserListPage() {
                 required
               >
                 <option value="">Select size…</option>
-                {/* You can later load these from backend; for now just a few options */}
-                <option value="13">38</option>
-                <option value="14">39</option>
-                <option value="15">40</option>
-                <option value="16">41</option>
-                <option value="17">42</option>
+                {shoeSizes.map((size) => (
+                  <option key={size.id} value={size.id}>
+                    {size.shoe_size}
+                  </option>
+                ))}
               </select>
             </div>
 
