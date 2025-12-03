@@ -1,18 +1,12 @@
-# Enable CORS for your React frontend
 <IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "*"
-    Header set Access-Control-Allow-Headers "Content-Type"
-    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header always set Access-Control-Allow-Origin "http://localhost:5173"
+    Header always set Access-Control-Allow-Headers "Content-Type"
+    Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
 </IfModule>
 
-# Show PHP errors (useful for development)
-<IfModule mod_php.c>
-    php_flag display_errors On
-    php_value error_reporting E_ALL
+# Make sure OPTIONS doesn't 404 or redirect weirdly
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,L]
 </IfModule>
-
-# If OPTIONS request (preflight), return OK immediately
-RewriteEngine On
-
-RewriteCond %{REQUEST_METHOD} OPTIONS
-RewriteRule ^(.*)$ $1 [R=200,L]
