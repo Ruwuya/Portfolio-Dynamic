@@ -1,9 +1,12 @@
 <?php
-
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Methods: GET, OPTIONS");
+// CORS – must match your React dev origin
 header("Content-Type: application/json; charset=utf-8");
+
+// Handle preflight quickly
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
 
 require_once __DIR__ . '/../db.php';
 
@@ -25,17 +28,19 @@ $data = [];
 if ($result) {
     while ($row = $result->fetch_assoc()) {
         $data[] = [
-            "shoe_size" => (float)$row["shoe_size"],
-            "count"     => (int)$row["count"],
+            'shoe_size' => (float)$row['shoe_size'],
+            'count'     => (int)$row['count'],
         ];
     }
-    echo json_encode(["status" => "success", "data" => $data]);
+
+    echo json_encode([
+        'status' => 'success',
+        'data'   => $data,
+    ]);
 } else {
     http_response_code(500);
     echo json_encode([
-        "status"  => "error",
-        "message" => $conn->error
+        'status'  => 'error',
+        'message' => $conn->error,
     ]);
 }
-
-?>

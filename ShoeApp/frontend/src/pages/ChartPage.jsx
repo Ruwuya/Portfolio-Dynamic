@@ -88,8 +88,7 @@ export default function ChartPage() {
       <div className="home-content" style={{ maxWidth: "700px", width: "100%" }}>
         <h1>Shoe Size Frequency</h1>
         <p>
-          This chart shows how many registered users have each shoe size (EU),
-          based on the data stored in the database.
+          This bar chart shows the shoe size (EU sizes) of each user in the database.
         </p>
         <div
           id="chart_div"

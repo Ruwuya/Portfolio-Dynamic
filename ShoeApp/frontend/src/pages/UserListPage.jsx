@@ -5,7 +5,7 @@ export default function UserListPage() {
   const [users, setUsers] = useState([]);
   const [shoeSizes, setShoeSizes] = useState([]);
 
-  // Load users
+  // Loads users
   useEffect(() => {
     async function loadUsers() {
       try {
@@ -19,12 +19,12 @@ export default function UserListPage() {
     loadUsers();
   }, []);
 
-  // Load shoe sizes
+  // Loads shoe sizes from backend (getShoeSizes.php)
   useEffect(() => {
     async function loadSizes() {
       try {
         const res = await fetch(`${API_BASE}/getShoeSizes.php`);
-        const data = await res.json();   // <- expects an array
+        const data = await res.json();
         setShoeSizes(data);
       } catch (err) {
         console.error("Failed to load shoe sizes", err);
@@ -61,12 +61,10 @@ export default function UserListPage() {
       console.log("addUsers response:", data);
 
       if (data.status === "success" || data.success) {
-        // reload users
         const resUsers = await fetch(`${API_BASE}/getUsers.php`);
         const usersData = await resUsers.json();
         setUsers(usersData);
 
-        // clear form
         setForm({
           first_name: "",
           last_name: "",
@@ -93,7 +91,7 @@ export default function UserListPage() {
   return (
     <div className="page users-page">
       <div className="grid-two">
-        {/* LEFT SIDE: USERS LIST */}
+        {/* UserList on the left side of "Users" page */}
         <section className="card users-panel">
           <div className="users-panel-header">
             <h2>Users</h2>
@@ -119,7 +117,7 @@ export default function UserListPage() {
           </div>
         </section>
 
-        {/* RIGHT SIDE: ADD USER FORM */}
+        {/* Add user form right side of "Users" page */}
         <section className="card adduser-panel">
           <h2 className="adduser-title">Add User</h2>
 

@@ -1,3 +1,9 @@
+/**
+ ================================================================
+  --- Global styling i.e applies styles to the entire website ---
+ ================================================================
+*/
+
 /*
  ====================
   --- Theme Colors ---
@@ -58,6 +64,12 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+.custom-list li::marker {
+  color: var(--c-accent);
+  font-size: 1.2rem;
+}
+
 
 /*
  ====================
