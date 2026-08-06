@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const API_BASE_URL = "https://rehi01.skp-dp.sde.dk/portfolio-backend/api";
+import { API_BASE_URL } from "../config";
 
 export async function getProjects() {
   try {

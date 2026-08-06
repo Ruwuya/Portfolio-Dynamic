@@ -1,4 +1,5 @@
 import React from 'react';
+import { BACKEND_URL } from '../config';
 
 export default function About({ language }) {
   return (
@@ -67,13 +68,13 @@ export default function About({ language }) {
           {language === 'en' ? (
             <>
               If you'd like to see my CV in PDF format, please feel free to{' '}
-              <a href="http://localhost/portfolio-backend/uploads/CV_-_Rene_Hinrichsen_EN.pdf" download>download it here</a>
+              <a href={`${BACKEND_URL}/uploads/CV_-_Rene_Hinrichsen_EN.pdf`} download>download it here</a>
               .
             </>
           ) : (
             <>
               Hvis du gerne vil se mit CV i PDF-format, kan du{' '}
-              <a href="http://localhost/portfolio-backend/uploads/CV_-_Rene_Hinrichsen_DA.pdf" download>downloade det her</a>
+              <a href={`${BACKEND_URL}/uploads/CV_-_Rene_Hinrichsen_DA.pdf`} download>downloade det her</a>
               .
             </>
           )}

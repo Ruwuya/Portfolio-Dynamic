@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Home({ language }) {
   return (
@@ -57,14 +58,14 @@ export default function Home({ language }) {
           </p>
 
           <div className="home-buttons">
-            <a href="/projects">
+            <Link to="/projects">
               {language === "en" ? "View My Projects" : "Se Mine Projekter"}
-            </a>
-            <a href="/about">
+            </Link>
+            <Link to="/about">
               {language === "en"
                 ? "Learn more about me"
                 : "Læs mere om mig"}
-            </a>
+            </Link>
           </div>
         </div>
 

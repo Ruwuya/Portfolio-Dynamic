@@ -11,7 +11,7 @@ function App() {
   const [language, setLanguage] = useState("en");
 
   return (
-    <Router>
+    <Router basename="/portfolio">
       {/* Pass language + setter down to Navbar */}
       <Navbar language={language} setLanguage={setLanguage} />
 

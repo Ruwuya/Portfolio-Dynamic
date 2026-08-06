@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { BACKEND_URL } from "../config";
 
 export default function UploadPDF() {
   const [file, setFile] = useState(null);
@@ -13,7 +14,7 @@ export default function UploadPDF() {
 
     try {
       const res = await axios.post(
-        "http://localhost/portfolio-backend/api/uploadFile.php",
+        `${BACKEND_URL}/api/uploadFile.php`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -25,8 +26,7 @@ export default function UploadPDF() {
         setMessage("Upload successful!");
         // Build a full public URL to the uploaded file
         setFileUrl(
-          "http://localhost/portfolio-backend/" +
-            res.data.filePath.replace("../", "")
+          `${BACKEND_URL}/` + res.data.filePath.replace("../", "")
         );
       } else {
         setMessage(res.data.error || "Upload failed.");
