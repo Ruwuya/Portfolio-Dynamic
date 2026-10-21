@@ -1,7 +1,51 @@
 import { useState } from "react";
+import { runPython } from "../python.js";
 
-export default function TaskPage({ task }) {
+export default function TaskPage({ task, onSolved }) {
     const [code, setCode] = useState(task.starter);
+
+    const [tries, setTries] = useState(0);
+    const triesNeeded = 3;
+    const canSeeSolution = tries >= triesNeeded;
+
+    const [output, setOutput] = useState("");
+    const [running, setRunning] = useState(false);
+
+    const [feedback, setFeedback] = useState(null); // Okay message
+    const [solved, setSolved] = useState(false); // Task solved
+
+    const [hintsShown, setHintsShown] = useState(0);
+    const hints = task.hints || [];
+
+    async function handleRun() {
+        setRunning(true);
+        setOutput("Kører...");
+        setFeedback(null);
+
+        const result = await runPython(code);
+        // A stop or an error counts as a failed attempt. Otherwise the task's own check decides.
+        let verdict;
+        if (result.timeout) {
+            setOutput("");
+            verdict = "Programmet kørte i mere end 5 sekunder, så vi stoppede det. Det sker tit, hvis en løkke aldrig bliver færdig.";
+        } else if (result.error) {
+            setOutput(result.output + result.error);
+            verdict = "Koden gav en fejl – læs fejlbeskeden ovenfor.";
+        } else {
+            setOutput(result.output || "Intet blev udskrevet");
+            verdict = task.check(result.output, code);
+        }
+
+        if (verdict === true) {
+            setSolved(true);
+            onSolved(task.id);
+            setFeedback({ ok: true, message: "Godt klaret!" });
+        } else {
+            setTries(tries + 1);
+            setFeedback({ ok: false, message: verdict });
+        }
+        setRunning(false);
+    }
 
     return (
         <section>
@@ -13,15 +57,37 @@ export default function TaskPage({ task }) {
                 rows={8}
                 spellCheck={false}
             />
-            <button onClick={() => alert(code)}>Kør</button>
-            <details>
-                <summary>Godt at vide</summary>
-                <p>{task.goodToKnow}</p>
-            </details>
-            <details>
-                <summary>Se løsning</summary>
-                <pre>{task.solution}</pre>
-            </details>
+            <button onClick={handleRun} disabled={running}>
+                {running ? "Kører..." : "Kør"}
+            </button>
+            <pre>{output}</pre>
+            {feedback && <p>{feedback.message}</p>}
+
+            {hints.slice(0, hintsShown).map((hint, i) => (
+                <p key={i}>💡 {hint}</p>
+            ))}
+            {hintsShown < hints.length && (
+                <button onClick={() => setHintsShown(hintsShown + 1)}>
+                    Vis et hint ({hintsShown + 1} af {hints.length})
+                </button>
+            )}
+
+            {(solved || canSeeSolution) && (
+                <details open={solved}>
+                    <summary>Godt at vide</summary>
+                    <p>{task.goodToKnow}</p>
+                </details>
+            )}
+            {canSeeSolution ? (
+                <details>
+                    <summary>Se løsning</summary>
+                    <pre>{task.solution}</pre>
+                </details>
+            ) : (
+                <button disabled>
+                    Se løsning (efter {triesNeeded} forsøg - du har prøvet {tries})
+                </button>
+            )}
         </section>
     )
 }

@@ -1,0 +1,14 @@
+.layout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar button.active {
+  font-weight: bold;
+}
