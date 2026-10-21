@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { runPython } from "../python.js";
 import { explainError } from "../errors.js";
+import CodeEditor from "./CodeEditor.jsx";
 
 export default function TaskPage({ task, onSolved }) {
     const [code, setCode] = useState(task.starter);
@@ -35,7 +36,7 @@ export default function TaskPage({ task, onSolved }) {
         } else if (result.error) {
             setOutput(result.output);
             setErrorInfo(explainError(result.error));
-            verdict = "Koden gav en fejl - se forklaring nedenfor.";
+            verdict = "Koden gav en fejl - se forklaringen ovenfor.";
         } else {
             setOutput(result.output || "Intet blev udskrevet");
             verdict = task.check(result.output, code);
@@ -56,11 +57,10 @@ export default function TaskPage({ task, onSolved }) {
         <section>
             <h2>{task.id} {task.title}</h2>
             <p>{task.text}</p>
-            <textarea
+            <CodeEditor
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
-                rows={8}
-                spellCheck={false}
+                onChange={setCode}
+                onRun={() => { if (!running) handleRun() }}
             />
             <button onClick={handleRun} disabled={running}>
                 {running ? "Kører..." : "Kør"}

@@ -12,3 +12,10 @@
 .sidebar button.active {
   font-weight: bold;
 }
+.code-editor {
+    width: 100%;
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: 16px;
+    line-height: 1.5;
+    tab-size: 4;
+}
