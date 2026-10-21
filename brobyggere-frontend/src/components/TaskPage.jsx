@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { runPython } from "../python.js";
+import { explainError } from "../errors.js";
 
 export default function TaskPage({ task, onSolved }) {
     const [code, setCode] = useState(task.starter);
@@ -17,10 +18,13 @@ export default function TaskPage({ task, onSolved }) {
     const [hintsShown, setHintsShown] = useState(0);
     const hints = task.hints || [];
 
+    const [errorInfo, setErrorInfo] = useState(null);
+
     async function handleRun() {
         setRunning(true);
         setOutput("Kører...");
         setFeedback(null);
+        setErrorInfo(null);
 
         const result = await runPython(code);
         // A stop or an error counts as a failed attempt. Otherwise the task's own check decides.
@@ -29,8 +33,9 @@ export default function TaskPage({ task, onSolved }) {
             setOutput("");
             verdict = "Programmet kørte i mere end 5 sekunder, så vi stoppede det. Det sker tit, hvis en løkke aldrig bliver færdig.";
         } else if (result.error) {
-            setOutput(result.output + result.error);
-            verdict = "Koden gav en fejl – læs fejlbeskeden ovenfor.";
+            setOutput(result.output);
+            setErrorInfo(explainError(result.error));
+            verdict = "Koden gav en fejl - se forklaring nedenfor.";
         } else {
             setOutput(result.output || "Intet blev udskrevet");
             verdict = task.check(result.output, code);
@@ -61,6 +66,18 @@ export default function TaskPage({ task, onSolved }) {
                 {running ? "Kører..." : "Kør"}
             </button>
             <pre>{output}</pre>
+            {errorInfo && (
+            <div className="error">
+                <strong>{errorInfo.title}</strong>
+                <p>{errorInfo.text}</p>
+                {errorInfo.line && <p>Fejlen er i linje {errorInfo.line}.</p>}
+                <details>
+                    <summary>Pythons egen fejlbesked</summary>
+                    <pre>{errorInfo.original}</pre>
+                </details>
+            </div>
+            )}
+
             {feedback && <p>{feedback.message}</p>}
 
             {hints.slice(0, hintsShown).map((hint, i) => (
