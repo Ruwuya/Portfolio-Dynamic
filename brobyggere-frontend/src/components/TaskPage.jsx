@@ -98,19 +98,25 @@ export default function TaskPage({ task, solved, onSolved }) {
     }
 
     return (
-        <section>
+        <section className="task">
             <h2>{task.id} {task.title}</h2>
-            <p>{task.text}</p>
+            <p className="task-text">{task.text}</p>
+
             <CodeEditor
                 value={code}
                 onChange={setCode}
                 onRun={() => { if (!running) handleRun() }}
             />
-            <button onClick={handleRun} disabled={running}>
-                {running ? "Kører..." : "Kør"}
-            </button>
-            <button onClick={resetCode} disabled={running}>Nulstil kode</button>
-            <pre>{output}</pre>
+            <div className="actions">
+                <button className="btn btn-primary" onClick={handleRun} disabled={running}>
+                    {running ? "Kører..." : "Kør"}
+                </button>
+                <button className="btn btn-secondary" onClick={resetCode} disabled={running}>Nulstil kode</button>
+                <span className="shortcut">eller Ctrl + Enter</span>
+            </div>
+
+            <div className="output-label">Output</div>
+            <pre className="output">{output}</pre>
             {inputRequest && (
                 <InputDialog
                     key={inputRequest.id}
@@ -120,44 +126,50 @@ export default function TaskPage({ task, solved, onSolved }) {
                 />
             )}
             {errorInfo && (
-            <div className="error">
-                <strong>{errorInfo.title}</strong>
-                <p>{errorInfo.text}</p>
-                {errorInfo.line && <p>Fejlen er i linje {errorInfo.line}.</p>}
-                <details>
-                    <summary>Pythons egen fejlbesked</summary>
-                    <pre>{errorInfo.original}</pre>
-                </details>
-            </div>
+                <div className="box error-box">
+                    <strong>{errorInfo.title}</strong>
+                    <p>{errorInfo.text}</p>
+                    {errorInfo.line && <p>Fejlen er i linje {errorInfo.line}.</p>}
+                    <details>
+                        <summary>Pythons egen fejlbesked</summary>
+                        <pre>{errorInfo.original}</pre>
+                    </details>
+                </div>
             )}
 
-            {feedback && <p>{feedback.message}</p>}
-
-            {hints.slice(0, hintsShown).map((hint, i) => (
-                <p key={i}>💡 {hint}</p>
-            ))}
-            {hintsShown < hints.length && (
-                <button onClick={() => setHintsShown(hintsShown + 1)}>
-                    Vis et hint ({hintsShown + 1} af {hints.length})
-                </button>
+            {feedback && (
+                <p className={feedback.ok ? "box feedback ok" : "box feedback not-yet"}>{feedback.message}</p>
             )}
 
             {(solved || canSeeSolution) && (
-                <details open={solved}>
+                <details className="good-to-know" open={solved}>
                     <summary>Godt at vide</summary>
                     <p>{task.goodToKnow}</p>
                 </details>
             )}
-            {canSeeSolution ? (
-                <details>
-                    <summary>Se løsning</summary>
-                    <pre>{task.solution}</pre>
-                </details>
-            ) : (
-                <button disabled>
-                    Se løsning (efter {triesNeeded} forsøg - du har prøvet {tries})
-                </button>
-            )}
+
+            <div className="help">
+                {hints.slice(0, hintsShown).map((hint, i) => (
+                    <p key={i} className="hint">💡 {hint}</p>
+                ))}
+                {hintsShown < hints.length && (
+                    <button className="btn btn-secondary" onClick={() => setHintsShown(hintsShown + 1)}>
+                        Vis et hint ({hintsShown + 1} af {hints.length})
+                    </button>
+                )}
+
+                {canSeeSolution ? (
+                    <details className="solution">
+                        <summary>Se løsning</summary>
+                        <pre>{task.solution}</pre>
+                    </details>
+                ) : (
+                    <button className="btn btn-secondary" disabled>
+                        Se løsning (efter {triesNeeded} forsøg - du har prøvet {tries})
+                    </button>
+                )}
+            </div>
+
         </section>
     )
 }

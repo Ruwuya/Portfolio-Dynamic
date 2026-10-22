@@ -27,6 +27,9 @@ export default function App() {
 
   const [solvedIds, setSolvedIds] = useState(() => loadProgress().solved ?? []);
 
+  // On phones the sidebar is hidden behind an "Opgaver" button
+  const [menuOpen, setMenuOpen] = useState(false);
+
   function markSolved(id) {
     if (!solvedIds.includes(id)) setSolvedIds([...solvedIds, id]);
   }
@@ -36,6 +39,7 @@ export default function App() {
     function onHashChange() {
       const i = indexFromHash();
       if (i !== -1) setIndex(i);
+      setMenuOpen(false); // close the phone menu after choosing a task
     }
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
@@ -64,31 +68,44 @@ export default function App() {
   }
 
   return (
-    <main>
-      <h1>Python for Brobyggere</h1>
-      <p>Lær at kode i Python, direkte i browseren.</p>
+    <div className="app">
+      <header className="topbar">
+        <div>
+          <h1>Python for brobyggere</h1>
+          <p className="tagline">Lær at kode i Python, direkte i browseren.</p>
+        </div>
+        <button
+          className="btn menu-toggle"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-expanded={menuOpen}
+        >
+          {menuOpen ? "Luk" : "Opgaver"}
+        </button>
+      </header>
+
       <div className="layout">
         <Sidebar
           modules={modules}
           currentId={task.id}
           solvedIds={solvedIds}
           onStartOver={startOver}
+          open={menuOpen}
         />
 
-        <div>
+        <main className="content">
           <TaskPage key={task.id} task={task} solved={solvedIds.includes(task.id)} onSolved={markSolved} />
 
-          <nav>
-            <button onClick={() => { window.location.hash = allTasks[index - 1].id; }} disabled={index === 0}>
+          <nav className="pager">
+            <button className="btn btn-secondary" onClick={() => { window.location.hash = allTasks[index - 1].id; }} disabled={index === 0}>
               Forrige
             </button>
-            <span> Opgave {index + 1} af {allTasks.length} </span>
-            <button onClick={() => { window.location.hash = allTasks[index + 1].id; }} disabled={index === allTasks.length - 1}>
+            <span>Opgave {index + 1} af {allTasks.length}</span>
+            <button className="btn btn-secondary" onClick={() => { window.location.hash = allTasks[index + 1].id; }} disabled={index === allTasks.length - 1}>
               Næste
             </button>
           </nav>
-        </div>
+        </main>
       </div>
-    </main>
+    </div>
   )
 }

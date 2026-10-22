@@ -296,7 +296,7 @@ export const modules = [
                     if (!/\bnumber1\s*=\s*17\b/.test(code)) return "Lav variablen number1 med værdien 17.";
                     if (!/\bnumber2\s*=\s*9\b/.test(code)) return "Lav variablen number2 med værdien 9.";
                     // sum is one of Python's own functions – overwriting it causes odd errors later
-                    if (/^\s*sum\s*=/m.test(code)) return "Kald ikke variablen sum – det navn bruger Python selv til noget andet. Kald den result.";
+                    if (/^\s*sum\s*=/m.test(code)) return "Kald ikke variablen sum - det navn bruger Python selv til noget andet. Kald den result.";
                     if (!/number1\s*\+\s*number2|number2\s*\+\s*number1/.test(code)) return "Lad Python lægge variablerne sammen: number1 + number2";
                     if (!lines(output).includes("26")) return "Resultatet mangler. Udskriv det med print(result).";
                     return true;
@@ -310,7 +310,7 @@ export const modules = [
                 solution: '# Lav en variabel age med din alder\nage = 15  # skriv din egen alder\n# Regn ud, hvor mange dage du er, og gem det i days\ndays = age * 365\n# Udskriv days\nprint(days)',
                 goodToKnow: 'Du kan også regne videre med days: days * 24 giver timer og days * 24 * 60 giver minutter. Prøv det!',
                 hints: [
-                    "Lav først age = 15 – med din egen alder.",
+                    "Lav først age = 15 - med din egen alder.",
                     "Gange er *: days = age * 365. Udskriv den med print(days).",
                 ],
                 check: (output, code) => {

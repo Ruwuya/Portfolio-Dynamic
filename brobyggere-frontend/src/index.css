@@ -1,30 +1,416 @@
-.layout {
+/* ---------- Colours (the same palette as the portfolio) ---------- */
+:root {
+  --dark: #222831;        /* top bar, editor, main button */
+  --medium: #393E46;      /* sidebar, output box */
+  --accent: #948979;      /* borders and details */
+  --light: #DFD0B8;       /* page background, text on dark */
+  --lighter: #E8DEC6;     /* cards, text in the editor */
+  --muted: #B5AA99;       /* small text on dark – a lighter --accent, so it's readable */
+
+  --ok: #256B42;          /* correct */
+  --ok-bg: #D5E8D4;
+  --ok-on-dark: #8FD19E;  /* "Løst" in the dark sidebar */
+  --error: #9C2B22;       /* error */
+  --error-bg: #F3D5CF;
+  --warn: #7A5200;        /* "not yet" */
+  --warn-bg: #F1E0B5;
+
+  --radius: 8px;
+  --mono: ui-monospace, "Cascadia Code", Consolas, "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--light);
+  color: var(--dark);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+h1, h2, h3 {
+  line-height: 1.25;
+}
+
+code, pre {
+  font-family: var(--mono);
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1.5rem;
+  background: var(--dark);
+  color: var(--light);
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.tagline {
+  margin: 0.1rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.menu-toggle {
+  display: none; /* only shown on phones – see the bottom of the file */
+}
+
+/* ---------- Layout: sidebar on the left, task on the right ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
   gap: 2rem;
-  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  align-items: start;
+}
+
+.content {
+  min-width: 0;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: var(--medium);
+  color: var(--light);
+}
+
+.module + .module {
+  margin-top: 1rem;
+}
+
+.module-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+}
+
+.badge {
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: var(--light);
+  color: var(--dark);
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .sidebar ul {
   list-style: none;
+  margin: 0;
   padding: 0;
 }
 
-.sidebar a.active {
-  font-weight: bold;
+.sidebar a {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.35rem 0.5rem;
+  border-left: 3px solid transparent;
+  border-radius: 4px;
+  color: var(--light);
+  font-size: 0.9rem;
+  text-decoration: none;
 }
+
+.sidebar a:hover {
+  background: rgba(223, 208, 184, 0.08);
+}
+
+.sidebar a.active {
+  border-left-color: var(--accent);
+  background: var(--dark);
+  font-weight: 600;
+}
+
+/* "Løst" / "-" get the same width, so the task numbers line up */
+.status {
+  flex: 0 0 2.4rem;
+  color: var(--muted);
+}
+
+.status.done {
+  color: var(--ok-on-dark);
+  font-weight: 600;
+}
+
+.start-over {
+  width: 100%;
+  margin-top: 1.25rem;
+  padding: 0.45rem;
+  border: 1px solid var(--muted);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.start-over:hover {
+  color: var(--light);
+  border-color: var(--light);
+}
+
+/* ---------- The task ---------- */
+.task {
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  background: var(--lighter);
+  box-shadow: 0 1px 3px rgba(34, 40, 49, 0.15);
+}
+
+.task h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+}
+
+.task-text {
+  margin: 0 0 1rem;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  padding: 0.55rem 1.1rem;
+  border: 2px solid var(--dark);
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--dark);
+  color: var(--light);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--medium);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--dark);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(34, 40, 49, 0.08);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.shortcut {
+  color: var(--medium);
+  font-size: 0.85rem;
+}
+
+/* ---------- Code editor ---------- */
 .code-editor {
-    width: 100%;
-    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
-    font-size: 16px;
-    line-height: 1.5;
-    tab-size: 4;
+  display: block;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 2px solid var(--dark);
+  border-radius: var(--radius);
+  background: var(--dark);
+  color: var(--lighter);
+  caret-color: var(--light);
+  font-family: var(--mono);
+  font-size: 16px; /* 16px stops iPhones zooming in */
+  line-height: 1.5;
+  tab-size: 4;
+  resize: vertical;
+}
+
+.code-editor:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.code-editor::selection {
+  background: var(--accent);
+  color: var(--dark);
+}
+
+/* ---------- Output ---------- */
+.output-label {
+  margin-bottom: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--medium);
+}
+
+.output {
+  min-height: 3.2rem;
+  margin: 0 0 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  background: var(--medium);
+  color: var(--lighter);
+  font-size: 15px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Feedback, errors and hints ---------- */
+.box {
+  margin: 0 0 1rem;
+  padding: 0.8rem 1rem;
+  border-left: 5px solid;
+  border-radius: var(--radius);
+}
+
+.feedback.ok {
+  border-color: var(--ok);
+  background: var(--ok-bg);
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.feedback.not-yet {
+  border-color: var(--warn);
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.error-box {
+  border-color: var(--error);
+  background: var(--error-bg);
+}
+
+.error-box strong {
+  color: var(--error);
+}
+
+.error-box p {
+  margin: 0.35rem 0;
+}
+
+.error-box pre {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+.help {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.hint {
+  margin: 0;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius);
+  background: var(--light);
+}
+
+/* ---------- Fold-out boxes ---------- */
+details {
+  border-radius: var(--radius);
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.good-to-know {
+  margin: 0 0 1rem;
+  padding: 0.8rem 1rem;
+  border: 2px solid var(--accent);
+  background: var(--light);
+}
+
+.good-to-know p {
+  margin: 0.5rem 0 0;
+}
+
+.solution {
+  width: 100%;
+}
+
+.solution pre {
+  margin: 0.5rem 0 0;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  background: var(--dark);
+  color: var(--lighter);
+  white-space: pre-wrap;
+}
+
+/* ---------- Forrige / Næste ---------- */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  color: var(--medium);
+  font-size: 0.9rem;
+}
+
+/* ---------- The input() pop-up ---------- */
+.input-dialog {
+  width: min(420px, calc(100vw - 2rem));
+  padding: 1.25rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--lighter);
+  color: var(--dark);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.input-dialog::backdrop {
+  background: rgba(34, 40, 49, 0.6);
 }
 
 .input-dialog form {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  min-width: 280px;
+}
+
+.input-dialog form > p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--medium);
 }
 
 .input-dialog label {
@@ -34,6 +420,75 @@
 }
 
 .input-dialog input {
+  padding: 0.55rem 0.7rem;
+  border: 2px solid var(--dark);
+  border-radius: 6px;
+  font: inherit;
+  font-family: var(--mono);
   font-size: 16px;
-  padding: 0.4rem;
+}
+
+.input-dialog form > div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.input-dialog button {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--dark);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dark);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.input-dialog button[type="submit"] {
+  background: var(--dark);
+  color: var(--light);
+}
+
+/* ---------- Phones and small screens ---------- */
+@media (max-width: 800px) {
+  .topbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .topbar h1 {
+    font-size: 1.1rem;
+  }
+
+  .tagline {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: block;
+    border-color: var(--light);
+    background: transparent;
+    color: var(--light);
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  /* The sidebar is hidden until "Opgaver" is pressed */
+  .sidebar {
+    display: none;
+    position: static;
+    max-height: none;
+  }
+
+  .sidebar.open {
+    display: block;
+  }
+
+  .task {
+    padding: 1rem;
+  }
 }
