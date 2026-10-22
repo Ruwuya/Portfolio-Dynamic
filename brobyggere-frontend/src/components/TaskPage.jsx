@@ -9,7 +9,7 @@ export default function TaskPage({ task, solved, onSolved }) {
     const [code, setCode] = useState(() => loadProgress().code?.[task.id] ?? task.starter);
 
     const [tries, setTries] = useState(() => loadProgress().tries?.[task.id] ?? 0);
-    const triesNeeded = 3;
+    const triesNeeded = 2;
     const canSeeSolution = tries >= triesNeeded;
 
     const [output, setOutput] = useState("");

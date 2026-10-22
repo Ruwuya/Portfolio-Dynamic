@@ -1,5 +1,15 @@
 const lines = (output) => output.split("\n").map((l) => l.trim()).filter((l) => l !== "");
 
+// Finds e.g. "count =+ 1" or "count =- 1", where the signs are swapped round.
+// Python doesn't give an error – it just reads it as count = +1 – so we have to catch it ourselves.
+// Gives a message with the student's own variable name, or null if everything is fine.
+function swappedSigns(code) {
+    const match = code.match(/([\p{L}_][\p{L}\p{N}_]*)\s*=([+-])/u);
+    if (!match) return null;
+    const [, name, sign] = match;
+    return `Du har skrevet ${name} =${sign}. Det skal være ${name} ${sign}= (${sign === "+" ? "plus" : "minus"} først, så lighedstegn).`;
+}
+
 export const modules = [
     {
         id: 1,
@@ -240,8 +250,8 @@ export const modules = [
     },
     {
         id: 4,
-        title: "Programmering",
-        minutes: 30,
+        title: "Tal og regning",
+        minutes: 15,
         bonus: false,
         tasks: [
             {
@@ -291,7 +301,48 @@ export const modules = [
                     if (!lines(output).includes("26")) return "Resultatet mangler. Udskriv det med print(result).";
                     return true;
                 },
-            }
+            },
+            {
+                id: "4.3",
+                title: "Hvor mange dage gammel er du?",
+                text: 'Et år er cirka 365 dage. Lav en variabel age med din alder, og regn ud, hvor mange dage gammel du cirka er. Gem resultatet i en variabel days, og udskriv den.',
+                starter: '# Lav en variabel age med din alder\n\n# Regn ud, hvor mange dage du er, og gem det i days\n\n# Udskriv days\n',
+                solution: '# Lav en variabel age med din alder\nage = 15  # skriv din egen alder\n# Regn ud, hvor mange dage du er, og gem det i days\ndays = age * 365\n# Udskriv days\nprint(days)',
+                goodToKnow: 'Du kan også regne videre med days: days * 24 giver timer og days * 24 * 60 giver minutter. Prøv det!',
+                hints: [
+                    "Lav først age = 15 – med din egen alder.",
+                    "Gange er *: days = age * 365. Udskriv den med print(days).",
+                ],
+                check: (output, code) => {
+                    // The student picks their own age, so read it from the code and work out the right answer
+                    const ageMatch = code.match(/^\s*age\s*=\s*(\d+)\s*(#.*)?$/m);
+                    if (!ageMatch) return "Lav variablen age med din alder som et tal, fx age = 17.";
+                    if (!/age\s*\*\s*365|365\s*\*\s*age/.test(code)) return "Lad Python regne: days = age * 365";
+                    const expected = String(Number(ageMatch[1]) * 365);
+                    if (!lines(output).includes(expected)) return `Programmet skal udskrive ${expected}. Husk print(days).`;
+                    return true;
+                },
+            },
+            {
+                id: "4.4",
+                title: "Læg én til med +=",
+                text: 'Når noget skal tælles op, skriver du navnet på variablen, så += og så hvor meget der skal lægges til. For en variabel, der hedder likes, er det likes += 1. Nogen trykker like på dit opslag: brug += til at gøre likes én større, og udskriv likes igen. Programmet skal skrive 5 og derefter 6.',
+                starter: 'likes = 5\nprint(likes)\n\n# Nogen trykker like! Brug += til at lægge 1 til likes\n\n# Udskriv likes igen\n',
+                solution: 'likes = 5\nprint(likes)\n\n# Nogen trykker like! Brug += til at lægge 1 til likes\nlikes += 1\n# Udskriv likes igen\nprint(likes)',
+                goodToKnow: 'x += 1 er en forkortelse af x = x + 1: tag værdien i x, læg 1 til, og gem den igen i x. Det virker med alle variabler og alle tal - x += 10 lægger 10 til. Og med andre tegn: -= trækker fra, og *= ganger. Du kommer til at bruge += meget, når du laver løkker.',
+                hints: [
+                    "Skriv likes += 1 på linjen under kommentaren.",
+                    "Skriv så print(likes) igen nederst.",
+                ],
+                check: (output, code) => {
+                    const swapped = swappedSigns(code);
+                    if (swapped) return swapped;
+                    if (!/likes\s*\+=\s*1\b/.test(code)) return "Brug += til at lægge 1 til: likes += 1";
+                    const out = lines(output);
+                    if (out[0] !== "5" || out.at(-1) !== "6") return "Programmet skal skrive 5 og derefter 6. Husk at udskrive likes igen efter +=.";
+                    return true;
+                },
+            },
         ]
     }
 ];

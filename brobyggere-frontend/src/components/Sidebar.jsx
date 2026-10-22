@@ -4,8 +4,8 @@ export default function Sidebar({ modules, currentId, solvedIds, onStartOver }) 
             {modules.map((module) => (
                 <div key={module.id}>
                     <h3>
-                        {module.id} | {module.title}{" "}
-                        <small>{module.bonus ? "Bonus" : `${module.minutes} min`}</small>
+                        {module.id} | {module.title}
+                        {module.bonus && <small> Bonus</small>}
                     </h3>
                     <ul>
                         {module.tasks.map((task) => (
