@@ -15,7 +15,7 @@ export function explainError(errorText) {
     const [type, ...rest] = original.split(": ");
     const message = rest.join(": ");
 
-    // The line number is in 'File "<exec>", line N' – we take the last one
+    // The line number is in 'File "<exec>", line N' - we take the last one
     const found = [...errorText.matchAll(/File "<exec>", line (\d+)/g)];
     const line = found.length > 0 ? Number(found[found.length - 1][1]) : null;
 

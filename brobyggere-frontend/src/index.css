@@ -5,7 +5,7 @@
   --accent: #948979;      /* borders and details */
   --light: #DFD0B8;       /* page background, text on dark */
   --lighter: #E8DEC6;     /* cards, text in the editor */
-  --muted: #B5AA99;       /* small text on dark – a lighter --accent, so it's readable */
+  --muted: #B5AA99;       /* small text on dark - a lighter --accent, so it's readable */
 
   --ok: #256B42;          /* correct */
   --ok-bg: #D5E8D4;
@@ -68,7 +68,7 @@ code, pre {
 }
 
 .menu-toggle {
-  display: none; /* only shown on phones – see the bottom of the file */
+  display: none; /* only shown on phones - see the bottom of the file */
 }
 
 /* ---------- Layout: sidebar on the left, task on the right ---------- */
@@ -384,6 +384,16 @@ summary {
   margin-top: 1rem;
   color: var(--medium);
   font-size: 0.9rem;
+}
+
+/* The pager sits directly on the beige page, so the buttons get the card colour to stand out */
+.pager .btn-secondary {
+  background: var(--lighter);
+}
+
+.pager .btn-secondary:hover:not(:disabled) {
+  background: var(--dark);
+  color: var(--light);
 }
 
 /* ---------- The input() pop-up ---------- */

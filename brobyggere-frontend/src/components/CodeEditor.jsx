@@ -65,7 +65,7 @@ export default function CodeEditor({ value, onChange, onRun }) {
             return;
         }
 
-        // Enter: keep the indentation – and add 4 more after a line ending in ":"
+        // Enter: keep the indentation - and add 4 more after a line ending in ":"
         if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
             e.preventDefault();
             let indent = beforeCursor.match(/^ */)[0];

@@ -1,7 +1,7 @@
 const lines = (output) => output.split("\n").map((l) => l.trim()).filter((l) => l !== "");
 
 // Finds e.g. "count =+ 1" or "count =- 1", where the signs are swapped round.
-// Python doesn't give an error – it just reads it as count = +1 – so we have to catch it ourselves.
+// Python doesn't give an error - it just reads it as count = +1 - so we have to catch it ourselves.
 // Gives a message with the student's own variable name, or null if everything is fine.
 function swappedSigns(code) {
     const match = code.match(/([\p{L}_][\p{L}\p{N}_]*)\s*=([+-])/u);
@@ -26,7 +26,7 @@ export const modules = [
                 goodToKnow: 'Tekst skal stå mellem anførselstegn. Både "Hej" og \'Hej\' virker, bare de passer sammen. Vi bruger " i dette kursus. Parenteserne () hører til print().',
                 hints: [
                     "Find knappen Kør under kodefeltet, og klik på den.",
-                    "Du skal ikke ændre noget i koden – bare tryk Kør."
+                    "Du skal ikke ændre noget i koden - bare tryk Kør."
                 ],
                 check: (output) => {
                     if (lines(output).length === 0) return "Du skal skrive noget kode, der udskriver tekst";
@@ -101,7 +101,7 @@ export const modules = [
                 goodToKnow: 'Tegnet = gemmer det, der står til højre, i variablen til venstre. Variablen står altid til venstre: name = "Ali" virker, men "Ali" = name giver en fejl.',
                 hints: [
                     'Første linje: name = "Ali" (med dit eget navn).',
-                    'Linjen under: print(name) – uden anførselstegn om name.',
+                    'Linjen under: print(name) - uden anførselstegn om name.',
                 ],
                 check: (output, code) => {
                     if (lines(output).length === 0) return "Der kom ikke noget ud. Husk at udskrive variablen med print(name).";
@@ -114,10 +114,10 @@ export const modules = [
             {
                 id: "2.2",
                 title: "Gode variabelnavne",
-                text: 'Et variabelnavn må kun have bogstaver, tal og _ (understreg). Det må ikke starte med et tal, og det må ikke have mellemrum eller bindestreg. Koden herunder har tre dårlige navne. Ret dem, så programmet virker – husk at rette dem i print-linjerne også.',
+                text: 'Et variabelnavn må kun have bogstaver, tal og _ (understreg). Det må ikke starte med et tal, og det må ikke have mellemrum eller bindestreg. Koden herunder har tre dårlige navne. Ret dem, så programmet virker - husk at rette dem i print-linjerne også.',
                 starter: '2name = "Ali"\nmy city = "Odense"\nfavourite-food = "pizza"\n\nprint(2name)\nprint(my city)\nprint(favourite-food)',
                 solution: 'name2 = "Ali"\nmy_city = "Odense"\nfavourite_food = "pizza"\n\nprint(name2)\nprint(my_city)\nprint(favourite_food)',
-                goodToKnow: 'Brug _ i stedet for mellemrum og bindestreg: my_city. Store og små bogstaver er forskellige – Name og name er to forskellige variabler.',
+                goodToKnow: 'Brug _ i stedet for mellemrum og bindestreg: my_city. Store og små bogstaver er forskellige - Name og name er to forskellige variabler.',
                 hints: [
                     'Python stopper ved den første fejl. Ret én linje ad gangen, og kør igen.',
                     'Gode navne er fx name2, my_city og favourite_food. Husk at bruge de samme navne i print-linjerne.',
@@ -133,7 +133,7 @@ export const modules = [
                 text: 'Variabler kan også gemme tal. Tekst skrives med anførselstegn, men tal skrives uden: age = 15. Ret koden, så den passer på dig: dit navn, din alder og din by.',
                 starter: 'name = "Skriv dit navn"\nage = 0\ncity = "Skriv din by"\n\nprint(name)\nprint(age)\nprint(city)',
                 solution: 'name = "Ali"\nage = 15\ncity = "Odense"\n\nprint(name)\nprint(age)\nprint(city)',
-                goodToKnow: 'Tekst har anførselstegn: "Odense". Tal har ikke: 15. "15" med anførselstegn er tekst – det ligner et tal, men Python kan ikke regne med det. Det er præcis det, input() giver dig i modul 3.',
+                goodToKnow: 'Tekst har anførselstegn: "Odense". Tal har ikke: 15. "15" med anførselstegn er tekst - det ligner et tal, men Python kan ikke regne med det. Det er præcis det, input() giver dig i modul 3.',
                 hints: [
                     'Ret teksten mellem anførselstegnene i name og city, og skift 0 ud med din alder.',
                     'Alderen skal stå uden anførselstegn: age = 15',
@@ -162,7 +162,7 @@ export const modules = [
                     const out = lines(output);
                     if (out.length < 2) return "Programmet skal skrive to tal: først 17 og så 2.";
                     if (out[0] !== "17" || out.at(-1) !== "2") return "Det første tal skal være 17 og det sidste 2. Har du givet number værdien 2 efter den første print()?";
-                    if ((code.match(/^\s*number\s*=/gm) || []).length < 2) return "Giv den samme variabel en ny værdi: number = 2. Brug print(number) – ikke print(2).";
+                    if ((code.match(/^\s*number\s*=/gm) || []).length < 2) return "Giv den samme variabel en ny værdi: number = 2. Brug print(number) - ikke print(2).";
                     return true;
                 },
             },
@@ -295,7 +295,7 @@ export const modules = [
                 check: (output, code) => {
                     if (!/\bnumber1\s*=\s*17\b/.test(code)) return "Lav variablen number1 med værdien 17.";
                     if (!/\bnumber2\s*=\s*9\b/.test(code)) return "Lav variablen number2 med værdien 9.";
-                    // sum is one of Python's own functions – overwriting it causes odd errors later
+                    // sum is one of Python's own functions - overwriting it causes odd errors later
                     if (/^\s*sum\s*=/m.test(code)) return "Kald ikke variablen sum - det navn bruger Python selv til noget andet. Kald den result.";
                     if (!/number1\s*\+\s*number2|number2\s*\+\s*number1/.test(code)) return "Lad Python lægge variablerne sammen: number1 + number2";
                     if (!lines(output).includes("26")) return "Resultatet mangler. Udskriv det med print(result).";
@@ -347,5 +347,5 @@ export const modules = [
     }
 ];
 
-// All tasks in one flat list – for Forrige/Næste
+// All tasks in one flat list - for Forrige/Næste
 export const allTasks = modules.flatMap((module) => module.tasks);

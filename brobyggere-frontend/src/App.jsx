@@ -45,7 +45,7 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
-  // Make sure the URL always shows the current task – also on first load
+  // Make sure the URL always shows the current task - also on first load
   useEffect(() => {
     const id = allTasks[index].id;
     if (idFromHash() !== id) window.history.replaceState(null, "", "#" + id);

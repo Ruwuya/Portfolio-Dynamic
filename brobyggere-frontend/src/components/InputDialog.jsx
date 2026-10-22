@@ -21,7 +21,7 @@ export default function InputDialog({ question, onSubmit, onCancel }) {
         <dialog
             ref={ref}
             className="input-dialog"
-            // Esc closes the box – treat it the same as "Stop programmet"
+            // Esc closes the box - treat it the same as "Stop programmet"
             onCancel={(e) => { e.preventDefault(); onCancel(); }}
         >
             <form onSubmit={handleSubmit}>
