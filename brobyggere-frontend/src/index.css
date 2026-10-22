@@ -9,7 +9,7 @@
   padding: 0;
 }
 
-.sidebar button.active {
+.sidebar a.active {
   font-weight: bold;
 }
 .code-editor {

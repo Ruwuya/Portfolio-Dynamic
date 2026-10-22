@@ -1,4 +1,4 @@
-export default function Sidebar({ modules, currentId, solvedIds, onSelect, onStartOver }) {
+export default function Sidebar({ modules, currentId, solvedIds, onStartOver }) {
     return (
         <nav className="sidebar">
             {modules.map((module) => (
@@ -10,12 +10,9 @@ export default function Sidebar({ modules, currentId, solvedIds, onSelect, onSta
                     <ul>
                         {module.tasks.map((task) => (
                             <li key={task.id}>
-                                <button
-                                    onClick={() => onSelect(task.id)}
-                                    className={task.id === currentId ? "active" : ""}
-                                >
+                                <a href={`#${task.id}`} className={task.id === currentId ? "active" : ""}>
                                     {solvedIds.includes(task.id) ? "Løst" : "-"} {task.id} | {task.title}
-                                </button>
+                                </a>
                             </li>
                         ))}
                     </ul>
