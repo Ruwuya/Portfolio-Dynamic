@@ -19,3 +19,21 @@
     line-height: 1.5;
     tab-size: 4;
 }
+
+.input-dialog form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 280px;
+}
+
+.input-dialog label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-dialog input {
+  font-size: 16px;
+  padding: 0.4rem;
+}

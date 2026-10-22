@@ -76,6 +76,31 @@ export const modules = [
             },
         ],
     },
+    {
+        id: 1,
+        title: "Variabler og input",
+        minutes: 15,
+        bonus: false,
+        tasks: [
+            {
+                id: "1.1",
+                title: "Input",
+                text: 'Python kan også spørge brugeren om noget. input() viser en besked og venter på, at brugeren skriver noget og trykker Enter. Det, brugeren skriver, gemmes i kassen name. Tryk Kør og skriv dit navn.',
+                starter: '# input() spørger brugeren om noget\nname = input("Hvad hedder du? ")  # teksten mellem anførselstegnene vises som besked\nprint("Hej", name)',
+                solution: '# input() spørger brugeren om noget\nname = input("Hvad hedder du? ")  # teksten mellem anførselstegnene vises som besked\nprint("Hej", name)',
+                goodToKnow: 'input() stopper programmet, indtil brugeren har skrevet noget og trykket Enter. Det, brugeren skriver, gemmes i kassen name.',
+                hints: [
+                    "Tryk Kør og skriv dit navn i input-boksen. Tryk Enter, og se hvad der sker.",
+                    "Du skal ikke ændre noget i koden - bare kør den og skriv dit navn.",
+                ],
+                check: (output) => {
+                    if (lines(output).length === 0) return "Der kom ikke noget ud. Har du trykket Enter efter at have skrevet dit navn?";
+                    if (!output.includes("Hej")) return 'Programmet skriver ikke "Hej". Har du slettet print-linjen?';
+                    return true;
+                }
+            }
+        ],
+    }
 ];
 
 // All tasks in one flat list – for Forrige/Næste

@@ -22,7 +22,8 @@ function startWorker() {
 }
 startWorker();
 
-export async function runPython(code) {
+// inputs: answers to input() given so far. seed: keeps random the same between reruns.
+export async function runPython(code, inputs = [], seed = 0) {
     await ready; // Wait until python(worker) has loaded
     return new Promise((resolve) => {
         // If Python hasn't answered within 5 seconds: kill the worker and start a new one
@@ -30,7 +31,7 @@ export async function runPython(code) {
             waiting = null;
             worker.terminate();
             startWorker();
-            resolve({ type: "result", output: "", error: null, timeout: true });
+            resolve({ type: "result", output: "", error: null, needInput: null, timeout: true });
         }, TIMEOUT_MS);
 
         waiting = (msg) => {
@@ -38,6 +39,6 @@ export async function runPython(code) {
             resolve(msg);
         };
 
-        worker.postMessage({ code });
+        worker.postMessage({ code, inputs, seed });
     });
 }
