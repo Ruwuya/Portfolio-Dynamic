@@ -52,6 +52,11 @@ export function explainError(errorText) {
         return result("Der mangler et kolon",
             "Linjer med if, elif, else, while og for skal slutte med et kolon (:).");
     }
+    // Must come before the == check: Python suggests == here too, e.g. for favourite-food = "pizza"
+    if (message.includes("cannot assign to expression")) {
+        return result("Ugyldigt variabelnavn",
+            "Til venstre for = skal der stå ét variabelnavn. Et navn må ikke have bindestreg (-), for så tror Python, det er et minus. Brug _ i stedet, fx favourite_food.");
+    }
     if (message.includes("meant '=='")) {
         return result("= eller ==?",
             "Et enkelt = gemmer noget i en variabel. Når du vil spørge \"er de ens?\", skal du bruge to: ==. Fx: if alder == 18:");
@@ -90,9 +95,10 @@ export function explainError(errorText) {
         return result("Tekst + tal",
             "Du prøver at sætte tekst og et tal sammen med +. Lav tallet om til tekst med str(): \"Jeg er \" + str(alder)");
     }
-    if (message.includes("unsupported operand type(s) for +: 'int' and 'str'")) {
-        return result("Tal + tekst",
-            "Du prøver at lægge et tal og en tekst sammen. Hvis teksten kommer fra input(), så lav den om til et tal med int().");
+    // Any arithmetic sign (+ - * /) between a number and a text, e.g. 2026 - "2008"
+    if (/unsupported operand type\(s\) for .+: '(int|float)' and 'str'|unsupported operand type\(s\) for .+: 'str' and '(int|float)'/.test(message)) {
+        return result("Tal og tekst",
+            "Du prøver at regne med et tal og en tekst. Python kan kun regne med tal. Hvis teksten kommer fra input(), så lav den om til et tal med int().");
     }
     if (type === "ValueError" && message.includes("invalid literal for int()")) {
         return result("Det er ikke et helt tal",
