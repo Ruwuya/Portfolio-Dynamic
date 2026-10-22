@@ -184,18 +184,18 @@ export const modules = [
             {
                 id: "3.2",
                 title: "Sæt tekst sammen",
-                text: 'Få programmet til at skrive Hej Ali! med dit eget navn – og uden mellemrum før udråbstegnet. Prøv først at tilføje "!" med et komma, og se hvad der sker. Brug så + i stedet for komma: + sætter tekst sammen præcis som den er, uden at sætte mellemrum ind.',
+                text: 'Få programmet til at skrive Hej Ali! med dit eget navn - og uden mellemrum før udråbstegnet. Prøv først at tilføje "!" med et komma, og se hvad der sker. Brug så + i stedet for komma: + sætter tekst sammen præcis som den er, uden at sætte mellemrum ind.',
                 starter: 'name = input("Hvad hedder du? ")\nprint("Hej", name)',
                 solution: 'name = input("Hvad hedder du? ")\nprint("Hej " + name + "!")',
-                goodToKnow: 'Komma i print() sætter selv et mellemrum ind mellem tingene. Med + bestemmer du selv, hvor der skal være mellemrum – derfor står der et mellemrum inde i "Hej ". Prøv at fjerne det og se, hvad der sker.',
+                goodToKnow: 'Komma i print() sætter selv et mellemrum ind mellem tingene. Med + bestemmer du selv, hvor der skal være mellemrum - derfor står der et mellemrum inde i "Hej ". Prøv at fjerne det og se, hvad der sker.',
                 hints: [
                     'Byt kommaerne ud med +, og husk et mellemrum inde i anførselstegnene: "Hej "',
                     'Fx: print("Hej " + name + "!")',
                 ],
                 check: (output, code) => {
-                    // The last line is the greeting – the first one is the input question and answer
+                    // The last line is the greeting - the first one is the input question and answer
                     const last = lines(output).at(-1) || "";
-                    if (/\s!$/.test(last)) return "Der er et mellemrum før udråbstegnet. Det kommer fra kommaet – print() sætter selv mellemrum ind mellem tingene. Brug + i stedet.";
+                    if (/\s!$/.test(last)) return "Der er et mellemrum før udråbstegnet. Det kommer fra kommaet - print() sætter selv mellemrum ind mellem tingene. Brug + i stedet.";
                     if (!last.endsWith("!")) return 'Husk udråbstegnet til sidst: + "!"';
                     if (/^Hej\S/.test(last)) return 'Der mangler et mellemrum efter "Hej". Skriv "Hej " med et mellemrum inden det sidste anførselstegn.';
                     if (!code.includes("+")) return "Brug + til at sætte teksten sammen.";
@@ -238,6 +238,62 @@ export const modules = [
             },
         ],
     },
+    {
+        id: 4,
+        title: "Programmering",
+        minutes: 30,
+        bonus: false,
+        tasks: [
+            {
+                id: "4.1",
+                title: "Python som lommeregner",
+                text: 'Python kan regne. + er plus, - er minus, * er gange og / er divideret med. Skriv print() med regnestykket indeni, uden anførselstegn, ellers viser Python bare regnestykket som tekst. Udregn 13 + 14, 100 - 89, 7 * 6, 42 / 12.',
+                starter: '# Udregn de fire regnestykker - et print() per linje.\n13 + 14\n100 - 89\n7 * 6\n42 / 12\n',
+                solution: 'print(13 + 14)\nprint(100 - 89)\nprint(7 * 6)\nprint(42 / 12)',
+                goodToKnow: 'Divider (/) giver altid et kommatal - også når det går op. Og Python bruger punktum i stedet for komma: 3.5, ikke 3,5.',
+                hints: [
+                    "Skriv et regnestykke inde i hver print(), fx print(13 + 14).",
+                    "Gange er * (stjerne), og divider er / (skråstreg).",
+                ],
+                check: (output, code) => {
+                    const out = lines(output);
+                    if (out.length === 0) return "Der kom ikke noget ud. Python regner godt nok regnestykkerne ud, men du skal bruge print() for at vise resultatet.";
+                    const sums = [
+                        { re: /13\s*\+\s*14/, result: "27", text: "13 + 14" },
+                        { re: /100\s*-\s*89/, result: "11", text: "100 - 89" },
+                        { re: /7\s*\*\s*6/, result: "42", text: "7 * 6" },
+                        { re: /42\s*\/\s*12/, result: "3.5", text: "42 / 12" },
+                    ];
+                    for (const sum of sums) {
+                        if (!sum.re.test(code)) return `Lad Python regne ${sum.text} ud - skriv regnestykket inde i print().`;
+                        if (!out.includes(sum.result)) return `Resultatet af ${sum.text} mangler. Har du anførselstegn om regnestykket? Så viser Python det bare som tekst.`;
+                    }
+                    return true;
+                },
+            },
+            {
+                id: "4.2",
+                title: "Regn med variabler",
+                text: 'Du kan regne med variabler ligesom med tal. Lav en variabel, der hedder number1, og giv den værdien 17. Lav en variabel number2 med værdien 9. Læg de to variabler sammen, gem summen i en variabel, der hedder result, og udskriv result.',
+                starter: '# Lav to variabler med tal i\n\n# Læg dem sammen, gem summen i result, og udskriv result\n',
+                solution: 'number1 = 17\nnumber2 = 9\nresult = number1 + number2\nprint(result)',
+                goodToKnow: 'Prøv at ændre number1 til 100 og kør igen. Resultatet følger automatisk med - du skal ikke rette regnestykket. Det er hele pointen med variabler.',
+                hints: [
+                    "Lav først number1 = 17 og number2 = 9 på hver sin linje.",
+                    "Udregn summen med result = number1 + number2, og udskriv den med print(result).",
+                ],
+                check: (output, code) => {
+                    if (!/\bnumber1\s*=\s*17\b/.test(code)) return "Lav variablen number1 med værdien 17.";
+                    if (!/\bnumber2\s*=\s*9\b/.test(code)) return "Lav variablen number2 med værdien 9.";
+                    // sum is one of Python's own functions – overwriting it causes odd errors later
+                    if (/^\s*sum\s*=/m.test(code)) return "Kald ikke variablen sum – det navn bruger Python selv til noget andet. Kald den result.";
+                    if (!/number1\s*\+\s*number2|number2\s*\+\s*number1/.test(code)) return "Lad Python lægge variablerne sammen: number1 + number2";
+                    if (!lines(output).includes("26")) return "Resultatet mangler. Udskriv det med print(result).";
+                    return true;
+                },
+            }
+        ]
+    }
 ];
 
 // All tasks in one flat list – for Forrige/Næste
