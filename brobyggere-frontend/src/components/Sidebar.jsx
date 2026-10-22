@@ -1,4 +1,4 @@
-export default function Sidebar({ modules, currentId, solvedIds, onSelect }) {
+export default function Sidebar({ modules, currentId, solvedIds, onSelect, onStartOver }) {
     return (
         <nav className="sidebar">
             {modules.map((module) => (
@@ -21,6 +21,9 @@ export default function Sidebar({ modules, currentId, solvedIds, onSelect }) {
                     </ul>
                 </div>
             ))}
+            <button className="start-over" onClick={onStartOver}>
+                Start hele kurset forfra
+            </button>
         </nav>
     );
 }

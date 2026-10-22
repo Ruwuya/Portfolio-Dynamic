@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { runPython } from "../python.js";
 import { explainError } from "../errors.js";
+import { loadProgress, updateProgress } from "../storage.js";
 import CodeEditor from "./CodeEditor.jsx";
 
-export default function TaskPage({ task, onSolved }) {
-    const [code, setCode] = useState(task.starter);
+export default function TaskPage({ task, solved, onSolved }) {
+    const [code, setCode] = useState(() => loadProgress().code?.[task.id] ?? task.starter);
 
-    const [tries, setTries] = useState(0);
+    const [tries, setTries] = useState(() => loadProgress().tries?.[task.id] ?? 0);
     const triesNeeded = 3;
     const canSeeSolution = tries >= triesNeeded;
 
@@ -14,12 +15,19 @@ export default function TaskPage({ task, onSolved }) {
     const [running, setRunning] = useState(false);
 
     const [feedback, setFeedback] = useState(null); // Okay message
-    const [solved, setSolved] = useState(false); // Task solved
 
     const [hintsShown, setHintsShown] = useState(0);
     const hints = task.hints || [];
 
     const [errorInfo, setErrorInfo] = useState(null);
+
+    // Save this task's code and tries whenever they change
+    useEffect(() => {
+        updateProgress((p) => {
+            p.code = { ...p.code, [task.id]: code };
+            p.tries = { ...p.tries, [task.id]: tries };
+        });
+    }, [task.id, code, tries]);
 
     async function handleRun() {
         setRunning(true);
@@ -43,7 +51,6 @@ export default function TaskPage({ task, onSolved }) {
         }
 
         if (verdict === true) {
-            setSolved(true);
             onSolved(task.id);
             setFeedback({ ok: true, message: "Godt klaret!" });
         } else {
@@ -51,6 +58,16 @@ export default function TaskPage({ task, onSolved }) {
             setFeedback({ ok: false, message: verdict });
         }
         setRunning(false);
+    }
+
+    // Brings back the starter code. Tries and "Løst" are kept.
+    function resetCode() {
+        if (window.confirm("Vil du hente startkoden tilbage? Din egen kode til denne opgave bliver slettet.")) {
+            setCode(task.starter);
+            setOutput("");
+            setFeedback(null);
+            setErrorInfo(null);
+        }
     }
 
     return (
@@ -65,6 +82,7 @@ export default function TaskPage({ task, onSolved }) {
             <button onClick={handleRun} disabled={running}>
                 {running ? "Kører..." : "Kør"}
             </button>
+            <button onClick={resetCode} disabled={running}>Nulstil kode</button>
             <pre>{output}</pre>
             {errorInfo && (
             <div className="error">
