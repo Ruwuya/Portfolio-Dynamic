@@ -473,6 +473,9 @@ export const modules = [
                     if (wrong.error || wrong.timeout) return "Programmet giver en fejl, når man skriver et forkert kodeord.";
                     if (!wrong.output.includes("Forkert kodeord")) return 'Med et forkert kodeord skal programmet skrive "Forkert kodeord".';
                     if (wrong.output.includes("Adgang givet")) return 'Med et forkert kodeord må programmet ikke skrive "Adgang givet".';
+
+                    // The program works - but only count it as solved when the student actually got in
+                    if (!output.includes("Adgang givet")) return "Dit program virker - det afviser forkerte kodeord. Kør det igen og skriv det rigtige kodeord for at komme ind.";
                     return true;
                 },
             }
