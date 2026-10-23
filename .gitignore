@@ -1,1 +1,13 @@
 .claude/
+
+# dependencies
+node_modules/
+
+# credentials: only on the server and your own machine, never in git
+portfolio-backend/config.php
+.env
+.env.*
+
+# misc
+.DS_Store
+*.log
