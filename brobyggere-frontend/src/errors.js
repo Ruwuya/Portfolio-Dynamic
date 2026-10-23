@@ -59,7 +59,7 @@ export function explainError(errorText) {
     }
     if (message.includes("meant '=='")) {
         return result("= eller ==?",
-            "Et enkelt = gemmer noget i en variabel. Når du vil spørge \"er de ens?\", skal du bruge to: ==. Fx: if alder == 18:");
+            "Et enkelt = gemmer noget i en variabel. Når du vil spørge \"er de ens?\", skal du bruge to: ==. Fx: if age == 18:");
     }
     if (message.includes("unterminated string literal")) {
         return result("Der mangler et anførselstegn",

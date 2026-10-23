@@ -40,6 +40,19 @@ export default function TaskPage({ task, solved, onSolved }) {
         });
     }
 
+    // Lets a task's check run the student's code again with other answers to input().
+    // Runs in the background, no pop-ups and nothing is shown on the page.
+    async function runForCheck(codeToRun, inputs = []) {
+        const result = await runPython(codeToRun, inputs, 0);
+        return {
+            output: result.output,
+            error: result.error,
+            timeout: result.timeout || false,
+            // true if the program asked for more input() than the check gave it
+            missingInput: result.needInput !== null,
+        };
+    }
+
     async function handleRun() {
         setRunning(true);
         setOutput("Kører...");
@@ -74,7 +87,7 @@ export default function TaskPage({ task, solved, onSolved }) {
             verdict = "Koden gav en fejl - se forklaringen ovenfor.";
         } else {
             setOutput(result.output || "Intet blev udskrevet");
-            verdict = task.check(result.output, code);
+            verdict = await task.check(result.output, code, { run: runForCheck });
         }
 
         if (verdict === true) {

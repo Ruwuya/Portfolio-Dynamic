@@ -149,6 +149,25 @@ export const modules = [
             },
             {
                 id: "2.4",
+                title: "Datatyper: str og int",
+                text: 'Python holder styr på, hvilken slags data der ligger i en variabel. Det kaldes datatypen. Tekst hedder str (kort for string), og hele tal hedder int (kort for integer). Med type() kan du spørge Python, hvilken datatype noget har. Kør koden og se. Lav så en variabel age_text = "15" med anførselstegn, og udskriv dens type.',
+                starter: 'name = "Ali"\nage = 15\n\nprint(type(name))\nprint(type(age))\n\n# Lav age_text = "15" (med anførselstegn), og udskriv dens type\n',
+                solution: 'name = "Ali"\nage = 15\n\nprint(type(name))\nprint(type(age))\n\n# Lav age_text = "15" (med anførselstegn), og udskriv dens type\nage_text = "15"\nprint(type(age_text))',
+                goodToKnow: '15 og "15" ligner hinanden, men det er to forskellige datatyper: 15 er en int, og "15" er en str. Det er derfor, input() kan drille - den giver altid en str. Der findes også float, som er kommatal som 3.5. Den møder du i modul 4.',
+                hints: [
+                    'Skriv age_text = "15" på en ny linje - med anførselstegn om tallet.',
+                    "Udskriv så typen med print(type(age_text)).",
+                ],
+                check: (output, code) => {
+                    if (!/age_text\s*=\s*["']15["']/.test(code)) return 'Lav variablen age_text med "15" i anførselstegn.';
+                    if (!/print\(\s*type\(\s*age_text\s*\)\s*\)/.test(code)) return "Udskriv typen med print(type(age_text)).";
+                    const strCount = lines(output).filter((l) => l === "<class 'str'>").length;
+                    if (strCount < 2) return "Programmet skal vise <class 'str'> for både name og age_text.";
+                    return true;
+                },
+            },
+            {
+                id: "2.5",
                 title: "En variabel kan skifte værdi",
                 text: 'En variabel kan få en ny værdi senere i programmet. Udvid koden: giv number værdien 2, og udskriv den igen. Programmet skal skrive 17 og derefter 2.',
                 starter: 'number = 17\nprint(number)\n\n# Giv number værdien 2, og udskriv den igen\n',
@@ -343,6 +362,120 @@ export const modules = [
                     return true;
                 },
             },
+        ]
+    },
+    {
+        id: 5,
+        title: "If-sætninger",
+        minutes: 20,
+        bonus: false,
+        tasks: [
+            {
+                id: "5.1",
+                title: "Er du voksen?",
+                text: 'If-sætninger kan få programmet til at gøre forskellige ting, alt efter om noget er sandt eller falsk. Koden herunder spørger brugeren om deres alder. Hvis de er 18 eller ældre, skriver Python "Du er voksen", ellers skriver den "Du er ikke voksen". Linjerne med if og else slutter med et kolon (:), og linjerne under er rykket 4 mellemrum ind - det er de linjer, der hører til. >= betyder "større end eller lig med". Prøv at køre koden og skriv forskellige aldre.',
+                starter: 'age = int(input("Hvor gammel er du? "))\n\nif age >= 18:\n    print("Du er voksen")\nelse:\n    print("Du er ikke voksen")',
+                solution: 'age = int(input("Hvor gammel er du? "))\n\nif age >= 18:\n    print("Du er voksen")\nelse:\n    print("Du er ikke voksen")',
+                goodToKnow: 'Du kan sammenligne med: > (større end), < (mindre end), >= (større end eller lig med), <= (mindre end eller lig med), == (lig med) og != (ikke lig med). Læg mærke til, at "lig med" er to lighedstegn: ==.',
+                hints: [
+                    "Tryk Kør og skriv forskellige aldre i input-boksen. Prøv både under og over 18.",
+                    "Du skal ikke ændre noget i koden - bare kør den og skriv forskellige aldre.",
+                ],
+                check: (output) => {
+                    if (lines(output).length === 0) return "Der kom ikke noget ud. Har du trykket Enter efter at have skrevet din alder?";
+                    if (!output.includes("Du er voksen") && !output.includes("Du er ikke voksen")) return 'Programmet skriver ikke "Du er voksen" eller "Du er ikke voksen". Har du slettet print-linjerne?';
+                    return true;
+                }
+            },
+            {
+                id: "5.2",
+                title: "En konstant: MYNDIG",
+                text: 'Tallet 18 står midt i koden. Hvis loven ændres, skal man lede efter det alle de steder det bruges. I stedet kan man gemme det i en konstant øverst i programmet: MYNDIG = 18. En konstant er en variabel, som ikke skal ændres, derfor skrives navnet med STORE bogstaver. Lav konstanten MYNDIG øverst, og brug den i if-linjen i stedet for 18.',
+                starter: '# Lav konstanten MYNDIG her\n\nage = int(input("Hvor gammel er du? "))\n\nif age >= 18:\n    print("Du er voksen")\nelse:\n    print("Du er ikke voksen")',
+                solution: '# Lav konstanten MYNDIG her\nMYNDIG = 18\n\nage = int(input("Hvor gammel er du? "))\n\nif age >= MYNDIG:\n    print("Du er voksen")\nelse:\n    print("Du er ikke voksen")',
+                goodToKnow: 'Python stopper dig faktisk ikke, hvis du ændrer en konstant. STORE BOGSTAVER er bare en aftale mellem programmører, det betyder: "Den her skal du ikke ændre." Fordelen er, at hvis myndighedsalderen en dag ændres, retter du kun ét sted.',
+                hints: [
+                    "Skriv MYNDIG = 18 på linjen under kommentaren.",
+                    "Skift 18 ud med MYNDIG i if-linjen: if age >= MYNDIG:",
+                ],
+                check: (output, code) => {
+                    if (/^\s*myndig\s*=/im.test(code) && !/^\s*MYNDIG\s*=/m.test(code)) return "Skriv konstantens navn med STORE bogstaver: MYNDIG";
+                    if (!/^\s*MYNDIG\s*=\s*18\s*$/m.test(code)) return "Lav konstanten øverst: MYNDIG = 18";
+                    if (/if\s+age\s*>=\s*18/.test(code)) return "Brug konstanten i if-linjen i stedet for 18: if age >= MYNDIG:";
+                    if (!/if\s+age\s*>=\s*MYNDIG/.test(code)) return "Skriv if-linjen sådan her: if age >= MYNDIG:";
+                    if (!output.includes("voksen")) return 'Programmet skal stadig skrive "Du er voksen" eller "Du er ikke voksen".';
+                    return true;
+                }
+            },
+            {
+                id: "5.3",
+                title: "= eller ==?",
+                text: 'Nu vil programmet sige tillykke, hvis man er præcis 18 år - så er man lige blevet myndig. Men der er en fejl i koden. Kør den, læs fejlbeskeden, og ret den.',
+                starter: 'MYNDIG = 18\n\nage = int(input("Hvor gammel er du? "))\n\nif age = MYNDIG:\n    print("Tillykke - du er lige blevet myndig!")\nelse:\n    print("Du er ikke præcis 18")',
+                solution: 'MYNDIG = 18\n\nage = int(input("Hvor gammel er du? "))\n\nif age == MYNDIG:\n    print("Tillykke - du er lige blevet myndig!")\nelse:\n    print("Du er ikke præcis 18")',
+                goodToKnow: 'Ét lighedstegn (=) gemmer noget i en variabel: age = 18 betyder "gem 18 i age". To lighedstegn (==) spørger: age == 18 betyder "er age lig med 18?". Huskeregel: når du spørger om noget, skal du bruge to.',
+                hints: [
+                    'Kig på if-linjen. Den skal spørge "er age lig med MYNDIG?" - hvor mange lighedstegn skal der så være?',
+                    "Skriv if age == MYNDIG: med to lighedstegn.",
+                ],
+                check: (output, code) => {
+                    if (!/if\s+(age\s*==\s*MYNDIG|MYNDIG\s*==\s*age)\s*:/.test(code)) return "Brug == i if-linjen: if age == MYNDIG:";
+                    if (!output.includes("myndig") && !output.includes("præcis 18")) return "Programmet skal stadig skrive en af de to beskeder.";
+                    return true;
+                },
+            },
+            {
+                id: "5.4",
+                title: "Flere muligheder med elif",
+                text: 'Nogle gange er der mere end to muligheder. Med elif (kort for "else if") kan du tilføje flere. Udvid koden, så 17-årige får beskeden "Du bliver voksen om et år". Sæt elif-linjen ind mellem if og else.',
+                starter: 'MYNDIG = 18\n\nage = int(input("Hvor gammel er du? "))\n\nif age >= MYNDIG:\n    print("Du er voksen")\n# Tilføj elif her\nelse:\n    print("Du er ikke voksen")',
+                solution: 'MYNDIG = 18\n\nage = int(input("Hvor gammel er du? "))\n\nif age >= MYNDIG:\n    print("Du er voksen")\nelif age == 17:\n    print("Du bliver voksen om et år")\nelse:\n    print("Du er ikke voksen")',
+                goodToKnow: 'Python tester betingelserne oppefra og ned og stopper ved den første, der er sand. Du kan have så mange elif, du vil - men kun én if i starten og højst én else til sidst. Smart trick: skriv MYNDIG - 1 i stedet for 17, så passer det stadig, hvis MYNDIG ændres.',
+                hints: [
+                    "elif-linjen skal spørge, om age er lig med 17 - husk to lighedstegn og kolon til sidst.",
+                    'Skriv elif age == 17: og på linjen under (rykket ind): print("Du bliver voksen om et år")',
+                ],
+                check: (output, code) => {
+                    // Positions of if, elif and else in the code (-1 if missing), to check the order
+                    const ifPos = code.search(/^\s*if\s/m);
+                    const elifPos = code.search(/^\s*elif\s/m);
+                    const elsePos = code.search(/^\s*else\s*:/m);
+                    if (elifPos === -1) return "Tilføj en elif-linje mellem if og else.";
+                    if (!(ifPos < elifPos && elifPos < elsePos)) return "elif skal stå efter if-blokken og før else.";
+                    if (!/elif\s+(age\s*==\s*(17|MYNDIG\s*-\s*1)|(17|MYNDIG\s*-\s*1)\s*==\s*age)\s*:/.test(code)) return "elif-linjen skal spørge, om age er 17: elif age == 17:";
+                    if (!/om et år|om ét år/.test(code)) return 'Skriv beskeden "Du bliver voksen om et år" under elif-linjen.';
+                    if (!output.includes("voksen")) return "Programmet skal stadig skrive en af beskederne.";
+                    return true;
+                },
+            },
+            {
+                id: "5.5",
+                title: "Kodeord",
+                text: 'Lav et lille login-program. Kodeordet er gemt i konstanten PASSWORD, og brugerens gæt bliver gemt i guess. Skriv en if-sætning, der skriver "Adgang givet", hvis guess er lig med PASSWORD - og ellers "Forkert kodeord". == virker også på tekst, ikke kun på tal.',
+                starter: 'PASSWORD = "Python123"\n\nguess = input("Skriv kodeordet: ")\n\n# Hvis guess er lig med PASSWORD: skriv "Adgang givet"\n# Ellers: skriv "Forkert kodeord"\n',
+                solution: 'PASSWORD = "Python123"\n\nguess = input("Skriv kodeordet: ")\n\n# Hvis guess er lig med PASSWORD: skriv "Adgang givet"\n# Ellers: skriv "Forkert kodeord"\nif guess == PASSWORD:\n    print("Adgang givet")\nelse:\n    print("Forkert kodeord")',
+                goodToKnow: 'Store og små bogstaver tæller: python123 med lille p er ikke det samme som Python123 - prøv det! Du kan også vende det om med != (ikke lig med): if guess != PASSWORD: print("Forkert kodeord"). Begge dele virker - det handler bare om, hvad der er nemmest at læse.',
+                hints: [
+                    "Start med if guess == PASSWORD: og husk kolon til sidst. Linjen under skal rykkes ind.",
+                    'Under else: skriver du print("Forkert kodeord") - også rykket ind.',
+                ],
+                check: async (output, code, { run }) => {
+                    if (/if\s+guess\s*(==|!=)\s*["']/.test(code)) return "Brug konstanten PASSWORD i if-linjen i stedet for at skrive kodeordet igen.";
+                    if (!/if\s+(guess\s*(==|!=)\s*PASSWORD|PASSWORD\s*(==|!=)\s*guess)\s*:/.test(code)) return "Lav en if-linje, der sammenligner guess med PASSWORD: if guess == PASSWORD:";
+
+                    // Test the program like a teacher would: once with the right password, once with a wrong one
+                    const right = await run(code, ["Python123"]);
+                    if (right.error || right.timeout) return "Programmet giver en fejl, når man skriver det rigtige kodeord.";
+                    if (!right.output.includes("Adgang givet")) return 'Med det rigtige kodeord (Python123) skal programmet skrive "Adgang givet".';
+                    if (right.output.includes("Forkert kodeord")) return 'Med det rigtige kodeord må programmet ikke også skrive "Forkert kodeord". Har du husket else:?';
+
+                    const wrong = await run(code, ["python123"]);
+                    if (wrong.error || wrong.timeout) return "Programmet giver en fejl, når man skriver et forkert kodeord.";
+                    if (!wrong.output.includes("Forkert kodeord")) return 'Med et forkert kodeord skal programmet skrive "Forkert kodeord".';
+                    if (wrong.output.includes("Adgang givet")) return 'Med et forkert kodeord må programmet ikke skrive "Adgang givet".';
+                    return true;
+                },
+            }
         ]
     }
 ];
