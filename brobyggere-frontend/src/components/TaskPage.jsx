@@ -3,7 +3,7 @@ import { runPython } from "../python.js";
 import { explainError } from "../errors.js";
 import { loadProgress, updateProgress } from "../storage.js";
 import CodeEditor from "./CodeEditor.jsx";
-import InputDialog from "./InputDialog.jsx";
+import InputBox from "./InputBox.jsx";
 
 export default function TaskPage({ task, solved, onSolved }) {
     const [code, setCode] = useState(() => loadProgress().code?.[task.id] ?? task.starter);
@@ -87,7 +87,15 @@ export default function TaskPage({ task, solved, onSolved }) {
             verdict = "Koden gav en fejl - se forklaringen ovenfor.";
         } else {
             setOutput(result.output || "Intet blev udskrevet");
-            verdict = await task.check(result.output, code, { run: runForCheck });
+            // The Legeplads has no check - the program just runs
+            verdict = task.free ? null : await task.check(result.output, code, { run: runForCheck });
+        }
+
+        // On the Legeplads nothing is "solved" and nothing counts as a try - only show stops and errors
+        if (task.free) {
+            if (verdict) setFeedback({ ok: false, message: verdict });
+            setRunning(false);
+            return;
         }
 
         if (verdict === true) {
@@ -112,7 +120,7 @@ export default function TaskPage({ task, solved, onSolved }) {
 
     return (
         <section className="task">
-            <h2>{task.id} {task.title}</h2>
+            <h2>{task.free ? task.title : `${task.id} ${task.title}`}</h2>
             <p className="task-text">{task.text}</p>
 
             <CodeEditor
@@ -131,9 +139,8 @@ export default function TaskPage({ task, solved, onSolved }) {
             <div className="output-label">Output</div>
             <pre className="output">{output}</pre>
             {inputRequest && (
-                <InputDialog
+                <InputBox
                     key={inputRequest.id}
-                    question={inputRequest.question}
                     onSubmit={(answer) => { setInputRequest(null); inputRequest.resolve(answer); }}
                     onCancel={() => { setInputRequest(null); inputRequest.resolve(null); }}
                 />
@@ -154,14 +161,14 @@ export default function TaskPage({ task, solved, onSolved }) {
                 <p className={feedback.ok ? "box feedback ok" : "box feedback not-yet"}>{feedback.message}</p>
             )}
 
-            {(solved || canSeeSolution) && (
+            {!task.free && (solved || canSeeSolution) && (
                 <details className="good-to-know" open={solved}>
                     <summary>Godt at vide</summary>
                     <p>{task.goodToKnow}</p>
                 </details>
             )}
 
-            <div className="help">
+            {!task.free && <div className="help">
                 {hints.slice(0, hintsShown).map((hint, i) => (
                     <p key={i} className="hint">💡 {hint}</p>
                 ))}
@@ -181,8 +188,7 @@ export default function TaskPage({ task, solved, onSolved }) {
                         Se løsning (efter {triesNeeded} forsøg - du har prøvet {tries})
                     </button>
                 )}
-            </div>
-
+            </div>}
         </section>
     )
 }

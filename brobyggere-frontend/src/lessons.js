@@ -582,8 +582,164 @@ export const modules = [
                 },
             }
         ]
+    },
+    {
+        id: 7,
+        title: "Løkker",
+        minutes: 35,
+        bonus: false,
+        tasks: [
+            {
+                id: "7.1",
+                title: "Gentag med for",
+                text: 'En løkke gentager kode. for i in range(5): kører linjerne under sig 5 gange. Ligesom med if skal linjen slutte med et kolon, og det, der skal gentages, skal rykkes ind. Kør koden, og lav den så om, så den skriver "Hej" 10 gange.',
+                starter: 'for i in range(5):\n    print("Hej")',
+                solution: 'for i in range(10):\n    print("Hej")',
+                goodToKnow: 'Alt, der er rykket ind under for-linjen, bliver gentaget. Linjer, der ikke er rykket ind, kører kun én gang - når løkken er færdig.',
+                hints: [
+                    "Tallet inde i range() bestemmer, hvor mange gange løkken kører.",
+                    "Skift 5 ud med 10: for i in range(10):",
+                ],
+                check: (output, code) => {
+                    if (!/^\s*for\s+\w+\s+in\s+range\(/m.test(code)) return "Brug en for-løkke: for i in range(10):";
+                    if ((code.match(/print\(/g) || []).length > 1) return "Du behøver kun én print() - lad løkken gentage den for dig.";
+                    const count = lines(output).filter((l) => l === "Hej").length;
+                    if (count !== 10) return `Programmet skriver "Hej" ${count} gange. Det skal være 10.`;
+                    return true;
+                },
+            },
+            {
+                id: "7.2",
+                title: "Tæl til 10",
+                text: 'Variablen i får et nyt tal, hver gang løkken kører. range(5) giver 0, 1, 2, 3, 4 - Python starter nemlig ved 0. Med range(1, 11) starter den ved 1 og stopper lige før 11. Kør koden og se tallene. Lav den så om, så den skriver tallene fra 1 til 10.',
+                starter: 'for i in range(5):\n    print(i)',
+                solution: 'for i in range(1, 11):\n    print(i)',
+                goodToKnow: 'I range(start, stop) er stop-tallet ikke med. Derfor skal der stå 11, hvis 10 skal være med. Det driller alle programmører i starten - også dem, der har kodet i mange år.',
+                hints: [
+                    "Kør koden først. Hvilket tal starter den med, og hvilket stopper den ved?",
+                    "Brug range(1, 11) - den starter ved 1 og stopper lige før 11.",
+                ],
+                check: (output, code) => {
+                    if (!/^\s*for\s+\w+\s+in\s+range\(/m.test(code)) return "Brug en for-løkke: for i in range(1, 11):";
+                    const out = lines(output);
+                    const expected = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+                    if (out[0] === "0") return "Programmet starter ved 0. Giv range() et starttal: range(1, ...)";
+                    if (out.at(-1) === "9") return "Programmet stopper ved 9. Husk, at stop-tallet ikke er med - brug 11.";
+                    if (out.join(" ") !== expected.join(" ")) return "Programmet skal skrive tallene fra 1 til 10 - ét på hver linje.";
+                    return true;
+                },
+            },
+            {
+                id: "7.3",
+                title: "Gangetabel",
+                text: 'Du kan regne med i inde i løkken. Skriv 7-tabellen: 7, 14, 21 ... op til 70 - ét tal på hver linje. Brug en for-løkke, der går fra 1 til 10, og gang i med 7.',
+                starter: '# Skriv 7-tabellen med en for-løkke\n',
+                solution: '# Skriv 7-tabellen med en for-løkke\nfor i in range(1, 11):\n    print(i * 7)',
+                goodToKnow: 'Prøv at skrive print(i, "x 7 =", i * 7) - så ligner det en rigtig gangetabel. Og skift 7 ud med et andet tal, så får du en anden tabel. Det er det smarte ved løkker: lidt kode kan lave meget arbejde.',
+                hints: [
+                    "Start med samme løkke som i 7.2: for i in range(1, 11):",
+                    "Inde i løkken (rykket ind): print(i * 7)",
+                ],
+                check: (output, code) => {
+                    if (!/^\s*for\s+\w+\s+in\s+range\(/m.test(code)) return "Brug en for-løkke: for i in range(1, 11):";
+                    if (!code.includes("*")) return "Lad Python regne: gang i med 7 inde i løkken.";
+                    // The last word on each line must be the result, so print(i, "x 7 =", i * 7) is fine too
+                    const results = lines(output).map((l) => l.split(" ").at(-1));
+                    const expected = ["7", "14", "21", "28", "35", "42", "49", "56", "63", "70"];
+                    if (results.join(" ") !== expected.join(" ")) return "Programmet skal skrive 7, 14, 21 ... op til 70 - ét tal på hver linje.";
+                    return true;
+                },
+            },
+            {
+                id: "7.4",
+                title: "Læg alle tal sammen",
+                text: 'Løkker er gode til at lægge sammen. Start med total = 0, og læg i til total, hver gang løkken kører: total += i. Læg alle tal fra 1 til 100 sammen, og udskriv total til sidst - efter løkken, så den kun bliver udskrevet én gang.',
+                starter: 'total = 0\n\n# Læg alle tal fra 1 til 100 til total\n\n# Udskriv total - efter løkken\n',
+                solution: 'total = 0\n\n# Læg alle tal fra 1 til 100 til total\nfor i in range(1, 101):\n    total += i\n\n# Udskriv total - efter løkken\nprint(total)',
+                goodToKnow: 'Svaret er 5050. Matematikeren Carl Friedrich Gauss skulle efter sigende have fået præcis den opgave som barn - og regnede den ud i hovedet: 1 + 100, 2 + 99, 3 + 98 ... giver 50 par, der hver giver 101. 50 * 101 = 5050. Python klarer det på et splitsekund.',
+                hints: [
+                    "for i in range(1, 101): - husk, at 101 ikke er med, så løkken stopper ved 100.",
+                    "Inde i løkken (rykket ind): total += i. Efter løkken (ikke rykket ind): print(total)",
+                ],
+                check: (output, code) => {
+                    const swapped = swappedSigns(code);
+                    if (swapped) return swapped;
+                    if (!/^\s*for\s+\w+\s+in\s+range\(/m.test(code)) return "Brug en for-løkke: for i in range(1, 101):";
+                    if (!/total\s*\+=|total\s*=\s*total\s*\+/.test(code)) return "Læg i til total inde i løkken: total += i";
+                    const out = lines(output);
+                    if (out.length > 1) return "Programmet skriver mange tal. print(total) er rykket ind, så den kører hver gang - ryk den ud, så den står efter løkken.";
+                    if (out[0] === "4950") return "Du får 4950 - tallet 100 er ikke med. Husk, at stop-tallet ikke er med: brug range(1, 101).";
+                    if (out[0] !== "5050") return "Programmet skal skrive summen af tallene fra 1 til 100.";
+                    return true;
+                },
+            },
+            {
+                id: "7.5",
+                title: "Nedtælling med while",
+                text: 'En while-løkke kører, så længe en betingelse er sand - lidt ligesom en if, der bliver ved. Koden herunder skal tælle ned fra 10 og så skrive "Affyring". Men der mangler noget: count bliver aldrig mindre. Kør den og se, hvad der sker. Ret den så med count -= 1.',
+                starter: 'count = 10\n\nwhile count > 0:\n    print(count)\n    # Gør count én mindre her\n\nprint("Affyring")',
+                solution: 'count = 10\n\nwhile count > 0:\n    print(count)\n    # Gør count én mindre her\n    count -= 1\n\nprint("Affyring")',
+                goodToKnow: 'Glemmer man at ændre count, er count > 0 altid sand, og løkken kører for evigt. Det kaldes en uendelig løkke - og det er derfor, kurset stopper programmer efter 5 sekunder. Brug for, når du ved, hvor mange gange noget skal ske, og while, når det afhænger af noget, der ændrer sig.',
+                hints: [
+                    "Inde i løkken - under print(count) og rykket lige så langt ind: count -= 1",
+                    'Får du "Programmet kørte i mere end 5 sekunder"? Så mangler count -= 1, eller også er den ikke rykket ind.',
+                ],
+                check: (output, code) => {
+                    const swapped = swappedSigns(code);
+                    if (swapped) return swapped;
+                    if (!/^\s*while\s/m.test(code)) return "Brug en while-løkke: while count > 0:";
+                    const out = lines(output);
+                    if (out.filter((l) => l.includes("Affyring")).length > 1) return 'print("Affyring") er rykket ind, så den kører hver gang. Ryk den ud, så den står efter løkken.';
+                    const expected = ["10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "Affyring"];
+                    if (out.join(" ") !== expected.join(" ")) return 'Programmet skal tælle ned fra 10 til 1 og derefter skrive "Affyring".';
+                    return true;
+                },
+            },
+            {
+                id: "7.6",
+                title: "Gættespillet - færdigt",
+                text: 'Nu kan du lave det rigtige gættespil. Tallet er mellem 1 og 100, og man skal blive ved med at gætte, til man rammer det. Lav en while-løkke, der kører, så længe guess ikke er lig med number - brug !=. Inde i løkken spørger du om et gæt og skriver "Tallet er højere" eller "Tallet er lavere". Opgaven er løst, når du har vundet et spil.',
+                starter: 'import random\n\nnumber = random.randint(1, 100)\nguess = 0  # starter på 0, så løkken kører mindst én gang\n\n# Lav en while-løkke, der kører, så længe guess ikke er lig med number\n# Inde i løkken: spørg om et gæt, og skriv "Tallet er højere" eller "Tallet er lavere"\n\nprint("Du gættede rigtigt - tallet var", number)',
+                solution: 'import random\n\nnumber = random.randint(1, 100)\nguess = 0  # starter på 0, så løkken kører mindst én gang\n\n# Lav en while-løkke, der kører, så længe guess ikke er lig med number\n# Inde i løkken: spørg om et gæt, og skriv "Tallet er højere" eller "Tallet er lavere"\nwhile guess != number:\n    guess = int(input("Gæt et tal mellem 1 og 100: "))\n    if guess < number:\n        print("Tallet er højere")\n    elif guess > number:\n        print("Tallet er lavere")\n\nprint("Du gættede rigtigt - tallet var", number)',
+                goodToKnow: 'Smart strategi: gæt altid midt i det, der er tilbage - først 50, så 25 eller 75, og så videre. Så finder du tallet på højst 7 gæt. Det hedder binær søgning, og computere bruger det hele tiden til at finde ting hurtigt.',
+                hints: [
+                    "while guess != number: - og husk at rykke alt, der hører til løkken, ind.",
+                    "Inde i løkken: guess = int(input(...)), og så if guess < number: og elif guess > number: med hver sin print. De skal rykkes 8 mellemrum ind, fordi de er inde i både løkken og if-sætningen.",
+                ],
+                check: async (output, code, { run }) => {
+                    if (!/random\.randint\(\s*1\s*,\s*100\s*\)/.test(code)) return "Lad number være random.randint(1, 100).";
+                    if (!/^\s*while\s/m.test(code)) return "Brug en while-løkke: while guess != number:";
+                    if (!/int\s*\(\s*input\s*\(/.test(code)) return "Lav gættet om til et tal: guess = int(input(...))";
+
+                    // Lock the secret number to 50, and play a game: too low, too high, right
+                    const fixed = code.replace(/random\.randint\(\s*1\s*,\s*100\s*\)/, "50");
+                    const game = await run(fixed, ["25", "75", "50"]);
+                    if (game.timeout) return "Programmet kørte i mere end 5 sekunder. Spørger du om et gæt inde i løkken?";
+                    if (game.error) return "Programmet giver en fejl, når man spiller et spil.";
+                    if (game.missingInput) return "Programmet bliver ved med at spørge, selvom man har gættet rigtigt. Tjek while-linjen: while guess != number:";
+                    if (!game.output.includes("25")) return "Programmet spørger aldrig om et gæt - løkken kører ikke. Tjek while-linjen: while guess != number:";
+                    if (!game.output.includes("75")) return "Programmet skal blive ved med at spørge, indtil man gætter rigtigt. Er input() inde i løkken?";
+                    if (!game.output.includes("højere")) return 'Når man gætter for lavt, skal programmet skrive "Tallet er højere".';
+                    if (!game.output.includes("lavere")) return 'Når man gætter for højt, skal programmet skrive "Tallet er lavere".';
+                    if (!game.output.includes("rigtigt")) return 'Når man gætter rigtigt, skal programmet skrive "Du gættede rigtigt".';
+
+                    // The program works - and the student's own game only ends when they win
+                    if (!output.includes("rigtigt")) return "Dit program virker. Kør det igen, og spil til du vinder.";
+                    return true;
+                },
+            },
+        ]
     }
 ];
 
 // All tasks in one flat list - for Forrige/Næste
 export const allTasks = modules.flatMap((module) => module.tasks);
+
+// The Legeplads: a free editor with no check, hints or solution. TaskPage sees free: true.
+export const playground = {
+    id: "legeplads",
+    title: "Legeplads",
+    free: true,
+    text: 'Her er der ingen opgave og ingen rigtige svar - du må skrive lige, hvad du vil. Brug for en idé? Lav dit eget quizspil med input() og if. Udvid gættespillet, så det tæller, hvor mange gæt du brugte. Lav en lommeregner, der spørger om to tal. Eller tegn en figur med print() og en løkke.',
+    starter: '# Legepladsen - her må du skrive, hvad du vil.\n# Prøv at ændre koden herunder, eller slet den og start forfra.\n\nname = input("Hvad hedder du? ")\nprint("Hej " + name + ", velkommen til legepladsen")\n',
+};

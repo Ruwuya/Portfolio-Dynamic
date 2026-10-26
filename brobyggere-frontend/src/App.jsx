@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { modules, allTasks } from "./lessons.js";
+import { modules, allTasks, playground } from "./lessons.js";
 
 import { loadProgress, updateProgress, clearProgress } from "./storage.js";
 
@@ -25,6 +25,10 @@ export default function App() {
   });
   const task = allTasks[index];
 
+  // The Legeplads lives at #legeplads. index keeps pointing at the last task, so we can go back to it.
+  const [onPlayground, setOnPlayground] = useState(() => idFromHash() === playground.id);
+  const page = onPlayground ? playground : task;
+
   const [solvedIds, setSolvedIds] = useState(() => loadProgress().solved ?? []);
 
   // On phones the sidebar is hidden behind an "Opgaver" button
@@ -38,7 +42,12 @@ export default function App() {
   useEffect(() => {
     function onHashChange() {
       const i = indexFromHash();
-      if (i !== -1) setIndex(i);
+      if (idFromHash() === playground.id) {
+        setOnPlayground(true);
+      } else if (i !== -1) {
+        setIndex(i);
+        setOnPlayground(false);
+      }
       setMenuOpen(false); // close the phone menu after choosing a task
     }
     window.addEventListener("hashchange", onHashChange);
@@ -47,9 +56,9 @@ export default function App() {
 
   // Make sure the URL always shows the current task - also on first load
   useEffect(() => {
-    const id = allTasks[index].id;
+    const id = onPlayground ? playground.id : allTasks[index].id;
     if (idFromHash() !== id) window.history.replaceState(null, "", "#" + id);
-  }, [index]);
+  }, [index, onPlayground]);
 
   // Save whenever index or solvedIds change
   useEffect(() => {
@@ -86,24 +95,33 @@ export default function App() {
       <div className="layout">
         <Sidebar
           modules={modules}
-          currentId={task.id}
+          currentId={page.id}
           solvedIds={solvedIds}
           onStartOver={startOver}
           open={menuOpen}
         />
 
         <main className="content">
-          <TaskPage key={task.id} task={task} solved={solvedIds.includes(task.id)} onSolved={markSolved} />
+          <TaskPage key={page.id} task={page} solved={solvedIds.includes(page.id)} onSolved={markSolved} />
 
-          <nav className="pager">
-            <button className="btn btn-secondary" onClick={() => { window.location.hash = allTasks[index - 1].id; }} disabled={index === 0}>
-              Forrige
-            </button>
-            <span>Opgave {index + 1} af {allTasks.length}</span>
-            <button className="btn btn-secondary" onClick={() => { window.location.hash = allTasks[index + 1].id; }} disabled={index === allTasks.length - 1}>
-              Næste
-            </button>
-          </nav>
+          {onPlayground ? (
+            <nav className="pager">
+              <button className="btn btn-secondary" onClick={() => { window.location.hash = task.id; }}>
+                Tilbage til opgave {task.id}
+              </button>
+            </nav>
+          ) : (
+            <nav className="pager">
+              <button className="btn btn-secondary" onClick={() => { window.location.hash = allTasks[index - 1].id; }} disabled={index === 0}>
+                Forrige
+              </button>
+              <span>Opgave {index + 1} af {allTasks.length}</span>
+              {/* After the last task, Næste leads to the Legeplads */}
+              <button className="btn btn-secondary" onClick={() => { window.location.hash = index === allTasks.length - 1 ? playground.id : allTasks[index + 1].id; }}>
+                {index === allTasks.length - 1 ? "Legeplads" : "Næste"}
+              </button>
+            </nav>
+          )}
         </main>
       </div>
     </div>

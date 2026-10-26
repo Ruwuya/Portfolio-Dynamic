@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 
-// Pop-up box for input(): shows Python's question and waits for the student's answer
-export default function InputDialog({ question, onSubmit, onCancel }) {
+// Answer field for input(), shown right under the output like in a terminal.
+// The question and the earlier output stay visible above it.
+export default function InputBox({ onSubmit, onCancel }) {
     const ref = useRef(null);
     const [answer, setAnswer] = useState("");
 
-    // <dialog> has to be opened with showModal() to sit on top of the page
+    // Put the cursor in the field, and scroll it into view on small screens
     useEffect(() => {
-        const dialog = ref.current;
-        if (!dialog.open) dialog.showModal();
-        return () => dialog.close();
+        ref.current.focus();
+        ref.current.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }, []);
 
     function handleSubmit(e) {
@@ -18,28 +18,21 @@ export default function InputDialog({ question, onSubmit, onCancel }) {
     }
 
     return (
-        <dialog
-            ref={ref}
-            className="input-dialog"
-            // Esc closes the box - treat it the same as "Stop programmet"
-            onCancel={(e) => { e.preventDefault(); onCancel(); }}
-        >
-            <form onSubmit={handleSubmit}>
-                <p>Programmet spørger:</p>
-                <label>
-                    <strong>{question.trim() || "Skriv et svar"}</strong>
-                    <input
-                        value={answer}
-                        onChange={(e) => setAnswer(e.target.value)}
-                        autoFocus
-                        autoComplete="off"
-                    />
-                </label>
-                <div>
-                    <button type="button" onClick={onCancel}>Stop programmet</button>
-                    <button type="submit">OK</button>
-                </div>
-            </form>
-        </dialog>
+        <form className="input-box" onSubmit={handleSubmit}>
+            <label>
+                <span>Dit svar</span>
+                <input
+                    ref={ref}
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    // Esc does the same as "Stop programmet"
+                    onKeyDown={(e) => { if (e.key === "Escape") { e.preventDefault(); onCancel(); } }}
+                    autoComplete="off"
+                    spellCheck={false}
+                />
+            </label>
+            <button type="submit" className="btn btn-primary">OK</button>
+            <button type="button" className="btn btn-secondary" onClick={onCancel}>Stop programmet</button>
+        </form>
     );
 }

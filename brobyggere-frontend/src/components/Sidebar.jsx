@@ -22,6 +22,9 @@ export default function Sidebar({ modules, currentId, solvedIds, onStartOver, op
                     </ul>
                 </div>
             ))}
+            <a href="#legeplads" className={currentId === "legeplads" ? "playground-link active" : "playground-link"}>
+                Legeplads
+            </a>
             <button className="start-over" onClick={onStartOver}>
                 Start hele kurset forfra
             </button>
