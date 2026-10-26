@@ -10,6 +10,21 @@ function swappedSigns(code) {
     return `Du har skrevet ${name} =${sign}. Det skal være ${name} ${sign}= (${sign === "+" ? "plus" : "minus"} først, så lighedstegn).`;
 }
 
+// Runs the code with the given answers to input() and checks what it prints.
+// Gives a message if something is wrong, or null if everything is fine.
+// endsWith (optional): the last line must end with this, e.g. the secret number.
+async function expectOutput(run, code, inputs, { when, shows, notShows = [], endsWith }) {
+    const When = when[0].toUpperCase() + when.slice(1);
+    const result = await run(code, inputs);
+    if (result.error || result.timeout) return `Programmet giver en fejl, ${when}.`;
+    if (!result.output.includes(shows)) return `${When}, skal programmet skrive noget med "${shows}".`;
+    for (const word of notShows) {
+        if (result.output.includes(word)) return `${When}, må programmet ikke skrive "${word}".`;
+    }
+    if (endsWith && !(lines(result.output).at(-1) || "").endsWith(endsWith)) return `${When}, skal programmet også vise tallet til sidst.`;
+    return null;
+}
+
 export const modules = [
     {
         id: 1,
@@ -53,13 +68,13 @@ export const modules = [
             {
                 id: "1.3",
                 title: "Flere linjer",
-                text: "Du kan skrive flere linjer kode. Python kører dem én ad gangen, oppefra og ned. Skriv tre linjer om dig selv: dit navn, din alder og din by. Tryk Kør og se, hvad der sker.",
-                starter: '# Skriv tre linjer om dig selv herunder\n',
+                text: 'Du kan skrive flere linjer kode. Python kører dem én ad gangen, oppefra og ned. Skriv tre linjer om dig selv: dit navn, din alder og din by. Hver linje skal være en print() med teksten i anførselstegn - ligesom i 1.2. Tryk Kør og se, hvad der sker.',
+                starter: '# Skriv tre linjer om dig selv herunder - én print() på hver linje, fx:\n# print("Hej, jeg hedder Ali")\n\n',
                 solution: 'print("Hej, jeg hedder Ali")\nprint("Jeg er 15 år gammel")\nprint("Jeg bor i Odense")',
                 goodToKnow: 'Linjer der starter med # er kommentarer. Python springer dem over - de er beskeder til mennesker, der læser koden',
                 hints: [
-                    "Husk at skrive én print() per linje.",
-                    "Du skal skrive tre linjer med print() funktionen.",
+                    'Hver linje skal starte med print( og slutte med ). Teksten skal stå i anførselstegn: print("Jeg bor i Odense")',
+                    'Skriv tre linjer under hinanden: print("Hej, jeg hedder Ali"), print("Jeg er 15 år gammel") og print("Jeg bor i Odense") - med dine egne oplysninger.',
                 ],
                 check: (output) => {
                     const count = lines(output).length;
@@ -541,6 +556,30 @@ export const modules = [
                     if (!lines(wrong.output).at(-1).endsWith("5")) return 'Vis hvad tallet var, når man gætter forkert: print("Forkert, tallet var", number)';
                     return true;
                 }
+            },
+            {
+                id: "6.3",
+                title: "Gæt et tal - med hints",
+                text: 'Udvid spillet, så det giver hints. Hvis gættet er rigtigt, skal programmet skrive "Du gættede rigtigt". Hvis gættet er for lavt, skal det skrive "Tallet er højere - det var" og tallet. Og hvis gættet er for højt, skal det skrive "Tallet er lavere - det var" og tallet.',
+                starter: 'import random\n\nnumber = random.randint(1, 10)\nguess = int(input("Gæt et tal mellem 1 og 10: "))\n\n# Tjek om gættet er rigtigt, for lavt eller for højt\n',
+                solution: 'import random\n\nnumber = random.randint(1, 10)\nguess = int(input("Gæt et tal mellem 1 og 10: "))\n\n# Tjek om gættet er rigtigt, for lavt eller for højt\nif guess == number:\n    print("Du gættede rigtigt")\nelif guess < number:\n    print("Tallet er højere, det var", number)\nelse:\n    print("Tallet er lavere, det var", number)',
+                goodToKnow: 'Du kan have så mange elif, du vil. Python tester dem oppefra og ned og stopper ved den første, der er sand.',
+                hints: [
+                    "Brug elif til at tjekke, om guess er mindre end number.",
+                    'Under elif-linjen skriver du print("Tallet er højere - det var", number).',
+                    "Under else: skriver du print(\"Tallet er lavere - det var\", number).",
+                ],
+                check: async (output, code, { run }) => {
+                    if (!/random\.randint\(\s*1\s*,\s*10\s*\)/.test(code)) return "Lad number være random.randint(1, 10).";
+                    if (!/int\s*\(\s*input\s*\(/.test(code)) return "Lav gættet om til et tal: guess = int(input(...))";
+
+                    // Replace the random number with 5, so the check knows the right answer
+                    const fixed = code.replace(/random\.randint\(\s*1\s*,\s*10\s*\)/, "5");
+                    return await expectOutput(run, fixed, ["5"], { when: "når man gætter rigtigt", shows: "rigtigt", notShows: ["højere", "lavere"] })
+                        ?? await expectOutput(run, fixed, ["3"], { when: "når man gætter for lavt", shows: "højere", notShows: ["lavere", "rigtigt"], endsWith: "5" })
+                        ?? await expectOutput(run, fixed, ["7"], { when: "når man gætter for højt", shows: "lavere", notShows: ["højere", "rigtigt"], endsWith: "5" })
+                        ?? true;
+                },
             }
         ]
     }
