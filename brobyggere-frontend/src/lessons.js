@@ -480,6 +480,69 @@ export const modules = [
                 },
             }
         ]
+    },
+    {
+        id: 6,
+        title: "Tilfældige tal",
+        minutes: 15,
+        bonus: false,
+        tasks: [
+            {
+                id: "6.1",
+                title: "Tilfældige tal",
+                text: 'Python kan lave tilfældige tal. Først skal du importere random, så kan du bruge random.randint(a, b) til at få et tilfældigt tal mellem a og b, inklusive begge ender. Kør koden herunder et par gange, og se hvad der sker. Lav den så om til en terning med 20 sider - sådan en, man bruger i rollespil.',
+                starter: 'import random\n\n# randint(a, b) giver et tilfældigt tal fra a til b - begge tal kan komme\nnumber = random.randint(1, 6)\nprint("Du slog", number)',
+                solution: 'import random\n\n# randint(a, b) giver et tilfældigt tal fra a til b - begge tal kan komme\nnumber = random.randint(1, 20)\nprint("Du slog", number)',
+                goodToKnow: 'import henter ekstra værktøjer ind i Python. random er et af mange moduler, der følger med - der findes også fx math til matematik og time til tid. Du skal kun importere et modul én gang, øverst i programmet.',
+                hints: [
+                    "Tryk Kør et par gange først. Kig så på tallene inde i random.randint( ).",
+                    "Skift 6 ud med 20: random.randint(1, 20)",
+                ],
+                check: (output, code) => {
+                    const out = lines(output);
+                    if (out.length === 0) return "Der kom ikke noget ud. Har du trykket Kør?";
+                    if (!out[0].startsWith("Du slog")) return 'Programmet skal skrive "Du slog" efterfulgt af et tal. Har du slettet print-linjen?';
+                    const num = Number(out[0].split(" ").at(-1));
+                    if (isNaN(num)) return "Programmet skal vise et tal til sidst. Har du slettet print-linjen?";
+                    if (!/random\.randint\(\s*1\s*,\s*20\s*\)/.test(code)) return "Lav terningen om, så den har 20 sider: random.randint(1, 20)";
+                    if (num < 1 || num > 20) return "Programmet skal give et tal mellem 1 og 20.";
+                    return true;
+                }
+            },
+            {
+                id: "6.2",
+                title: "Gæt et tal",
+                text: 'Lav et lille spil, hvor brugeren skal gætte et tilfældigt tal mellem 1 og 10. Gem det tilfældige tal i number, og gem brugerens gæt i guess. Hvis gættet er rigtigt, skal programmet skrive "Du gættede rigtigt" - ellers "Forkert, tallet var" efterfulgt af tallet.',
+                starter: 'import random\n\n# Gem et tilfældigt tal mellem 1 og 10 i number\n\n# Spørg brugeren om et gæt, og gem det i guess\n\n# Tjek om gættet er rigtigt eller forkert\n',
+                solution: 'import random\n\n# Gem et tilfældigt tal mellem 1 og 10 i number\nnumber = random.randint(1, 10)\n\n# Spørg brugeren om et gæt, og gem det i guess\nguess = int(input("Gæt et tal mellem 1 og 10: "))\n\n# Tjek om gættet er rigtigt eller forkert\nif guess == number:\n    print("Du gættede rigtigt")\nelse:\n    print("Forkert, tallet var", number)',
+                goodToKnow: 'Med kun ét gæt er der 1 ud af 10 chance for at vinde - det er mest held. I modul 7 lærer du løkker, så man kan blive ved med at gætte, til man rammer.',
+                hints: [
+                    "Gem først et tilfældigt tal mellem 1 og 10 i number: number = random.randint(1, 10)",
+                    "Spørg brugeren om et gæt, og lav det om til et tal: guess = int(input(...))",
+                    'Brug en if-sætning til at tjekke, om guess er lig med number. Under else: skriver du print("Forkert, tallet var", number)',
+                ],
+                check: async (output, code, { run }) => {
+                    if (!/random\.randint\(\s*1\s*,\s*10\s*\)/.test(code)) return "Gem et tilfældigt tal mellem 1 og 10 i number: number = random.randint(1, 10)";
+                    if (!/int\s*\(\s*input\s*\(/.test(code)) return "Spørg brugeren om et gæt, og lav det om til et tal: guess = int(input(...))";
+                    if (!/^\s*if\s/m.test(code)) return "Brug en if-sætning til at tjekke, om guess er lig med number.";
+
+                    // Replace the random number with 5, so the check knows the right answer
+                    const fixed = code.replace(/random\.randint\(\s*1\s*,\s*10\s*\)/, "5");
+
+                    const right = await run(fixed, ["5"]);
+                    if (right.error || right.timeout) return "Programmet giver en fejl, når man gætter rigtigt.";
+                    if (!right.output.includes("rigtigt")) return 'Når man gætter rigtigt, skal programmet skrive "Du gættede rigtigt"';
+                    if (right.output.includes("Forkert")) return 'Når man gætter rigtigt, må programmet ikke også skrive "Forkert". Har du husket else:?';
+
+                    const wrong = await run(fixed, ["3"]);
+                    if (wrong.error || wrong.timeout) return "Programmet giver en fejl, når man gætter forkert.";
+                    if (!wrong.output.includes("Forkert")) return 'Når man gætter forkert, skal programmet skrive "Forkert Tallet var" og tallet.';
+                    if (wrong.output.includes("rigtigt")) return 'Når man gætter forkert, må programmet ikke skrive "Du gættede rigtigt"';
+                    if (!lines(wrong.output).at(-1).endsWith("5")) return 'Vis hvad tallet var, når man gætter forkert: print("Forkert, tallet var", number)';
+                    return true;
+                }
+            }
+        ]
     }
 ];
 
