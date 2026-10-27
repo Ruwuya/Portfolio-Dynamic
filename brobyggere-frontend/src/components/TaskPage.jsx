@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { runPython } from "../python.js";
 import { explainError } from "../errors.js";
 import { loadProgress, updateProgress } from "../storage.js";
+import { mentions67, randomRoast } from "../easterEgg.js";
 import CodeEditor from "./CodeEditor.jsx";
 import InputBox from "./InputBox.jsx";
 
@@ -21,6 +22,14 @@ export default function TaskPage({ task, solved, onSolved }) {
     const hints = task.hints || [];
 
     const [errorInfo, setErrorInfo] = useState(null);
+
+    // The 67 easter egg: a message that slides in for a few seconds
+    const [roast, setRoast] = useState(null);
+    useEffect(() => {
+        if (!roast) return;
+        const timer = setTimeout(() => setRoast(null), 6000);
+        return () => clearTimeout(timer);
+    }, [roast]);
 
     // The question input() is waiting for, plus the function that sends the answer back
     const [inputRequest, setInputRequest] = useState(null);
@@ -58,6 +67,7 @@ export default function TaskPage({ task, solved, onSolved }) {
         setOutput("Kører...");
         setFeedback(null);
         setErrorInfo(null);
+        setRoast(mentions67(code) ? randomRoast() : null);
 
         // Run until the program no longer waits for input(). Each answer is added,
         // and the program runs again from the start with all the answers ready.
@@ -189,6 +199,12 @@ export default function TaskPage({ task, solved, onSolved }) {
                     </button>
                 )}
             </div>}
+            {roast && (
+                <div className="roast" role="status">
+                    <span>{roast}</span>
+                    <button className="btn btn-secondary" onClick={() => setRoast(null)}>Luk</button>
+                </div>
+            )}
         </section>
     )
 }

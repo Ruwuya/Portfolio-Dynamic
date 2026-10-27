@@ -7,6 +7,13 @@ const KNOWN_NAMES = {
     break: "break", continue: "continue", pass: "pass",
 };
 
+// The student's line of code from the error text - Python prints it right after 'File "<exec>", line N'
+function codeLine(errorText) {
+    const lines = errorText.split("\n");
+    const i = lines.findLastIndex((l) => l.includes('File "<exec>"'));
+    return i === -1 ? "" : (lines[i + 1] || "");
+}
+
 // Turns Python's English error text into a Danish explanation
 export function explainError(errorText) {
     // The last line is the actual error, e.g. "NameError: name 'Vejle' is not defined"
@@ -76,6 +83,12 @@ export function explainError(errorText) {
     if (message.includes("invalid character") && /[“”„‘’]/.test(message)) {
         return result("Krøllede anførselstegn",
             "Du har brugt “krøllede” anførselstegn - det sker, når man kopierer fra Word eller en telefon. Slet dem og skriv \" fra tastaturet (Shift + 2).");
+    }
+    // x used as multiplication, e.g. 2x2 or 2 x 2. Must come before the "invalid decimal literal" check,
+    // because Python gives the same message for 2x2 as for a name like 2name.
+    if (type === "SyntaxError" && /\d[xX]\d|[\w)]\s+[xX]\s+[\w(]/.test(codeLine(errorText))) {
+        return result("Gange skrives med *",
+            "I Python er gange en stjerne: 2 * 3. Et x forstår Python ikke som gange - det tror, det er et bogstav.");
     }
     if (message.includes("invalid decimal literal")) {
         return result("Et navn må ikke starte med et tal",

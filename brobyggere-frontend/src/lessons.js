@@ -99,6 +99,32 @@ export const modules = [
                     return true;
                 },
             },
+            {
+                id: "1.5",
+                type: "quiz",
+                title: "Quiz",
+                questions: [
+                    {
+                        question: "Hvad udskriver denne kode?",
+                        code: 'print("Hej")\n# print("med dig")\nprint("Python")',
+                        options: [
+                            { text: "Hej, med dig, Python", why: "Linjen med # er en kommentar, så den bliver ikke kørt, Python springer den over" },
+                            { text: "Hej og Python", correct: true, why: "Linjen med # er en kommentar, så den bliver ikke kørt, Python springer den over" },
+                            { text: "Kun Hej", why: "Python kører alle linjer oppefra og ned, ikke kun den første." }
+                        ]
+                    },
+                    {
+                        question: "Hvad er en variabel?",
+                        code: 'age = 18\nprint(age)',
+                        options: [
+                            { text: "En kasse med et navn på, hvor man kan gemme noget", correct: true, why: "age = 18 gemmer tallet 18 i kassen der hedder age. Når vi udskriver print(age), viser Python det, der ligger i kassen." },
+                            { text: "Et regnestykke, der siger, at age er lig med 18", why: 'I Python betyder = "gem i",  ikke "er lig med" som i matematik. age = 18 gemmer 18 i kassen age.' },
+                            { text: "En besked, som Python viser på skærmen", why: "Det er print(), der viser noget på skærmen. Variablen gemmer bare værdien, så du kan bruge den." },
+
+                        ]
+                    }
+                ]
+            }
         ],
     },
     {
@@ -200,6 +226,37 @@ export const modules = [
                     return true;
                 },
             },
+            {
+                id: "2.6",
+                title: "Quiz",
+                type: "quiz",
+                questions: [
+                    {
+                        question: "Hvilket af disse variabelnavne er ulovligt?",
+                        options: [
+                            { text: "my_name", why: "my_name er lovligt: bogstaver og _ (understreg) er tilladt." },
+                            { text: "2name", correct: true, why: "2name er ulovligt: et variabelnavn må ikke starte med et tal." },
+                            { text: "name2", why: "name2 er lovligt: bogstaver og tal er tilladt, bare det ikke starter med et tal." },
+                        ]
+                    },
+                    {
+                        question: "Og nu omvendt: hvilket af disse variabelnavne er lovligt?",
+                        options: [
+                            { text: "my city", why: "my city er ulovligt: et variabelnavn må ikke have mellemrum." },
+                            { text: "my-city", why: "my-city er ulovligt: et variabelnavn må ikke have bindestreg - Python tror, det er et minus." },
+                            { text: "my_city", correct: true, why: "my_city er lovligt: brug _ (understreg) i stedet for mellemrum og bindestreg." },
+                        ]
+                    },
+                    {
+                        question: 'Hvilken datatype har variablen age = 15 ?',
+                        options: [
+                            { text: "str", why: "age = 15 er et helt tal, så det er en int (integer)." },
+                            { text: "int", correct: true, why: "age = 15 er et helt tal, så det er en int (integer)." },
+                            { text: "float", why: "age = 15 er et helt tal, så det er en int (integer), ikke en float (decimalt tal)." },
+                        ]
+                    }
+                ]
+            }
         ],
     },
     {
@@ -280,6 +337,32 @@ export const modules = [
                     return true;
                 },
             },
+            {
+                id: "3.5",
+                title: "Quiz",
+                type: "quiz",
+                questions: [
+                    {
+                        question: "Brugeren skriver 15. Hvad udskriver programmet?",
+                        code: 'age = input("Hvor gammel er du? ")\nprint(age + age)',
+                        options: [
+                            { text: "30", why: "Det ville ske med tallet 15. Men input() giver altid tekst - og + sætter tekst sammen." },
+                            { text: "1515", correct: true, why: 'input() giver teksten "15", og "15" + "15" bliver til "1515". Skal du regne, skal du bruge int().' },
+                            { text: "Fejl", why: "Det ville give en fejl med age + 1 (tekst + tal). Men her er begge dele tekst, så + sætter dem bare sammen." },
+                        ],
+                    },
+                    {
+                        question: "Hvad udskriver denne kode?",
+                        code: 'print("Hej" + "med" + "dig")',
+                        options: [
+                            { text: "Hej med dig", why: "+ sætter tekst sammen præcis som den er - den sætter ikke selv mellemrum ind." },
+                            { text: "Fejl", why: "Det er helt fint at sætte tekst sammen med +." },
+                            { text: "Hejmeddig", correct: true, why: 'Uden mellemrum i teksterne bliver ordene klistret sammen. Skriv "Hej " med et mellemrum, hvis du vil have det.' },
+                        ],
+                    },
+
+                ]
+            }
         ],
     },
     {
@@ -377,6 +460,40 @@ export const modules = [
                     return true;
                 },
             },
+            {
+                id: "4.5",
+                title: "Quiz",
+                type: "quiz",
+                questions: [
+                    {
+                        question: "Hvilken af disse linjer giver en fejl?",
+                        options: [
+                            { text: "print(2 + 2)", why: "Den virker fint og udskriver 4." },
+                            { text: "print(2 / 2)", why: "Den virker fint og udskriver 1.0." },
+                            { text: "print(2 x 2)", correct: true, why: "I Python er gange en stjerne: 2 * 2. Et x forstår Python ikke som gange." },
+                        ],
+                    },
+                    {
+                        question: "Hvad udskriver denne kode?",
+                        code: "print(10 / 2)",
+                        options: [
+                            { text: "5", why: "Tæt på! Men divider (/) giver altid et kommatal - også når det går op." },
+                            { text: "5.0", correct: true, why: "Divider giver altid et kommatal, så 10 / 2 bliver 5.0. Og Python bruger punktum, ikke komma." },
+                            { text: "5,0", why: "Python bruger punktum i stedet for komma i kommatal: 5.0." },
+                        ],
+                    },
+                    {
+                        question: "Hvad udskriver denne kode?",
+                        code: "likes = 5\nlikes += 3\nprint(likes)",
+                        options: [
+                            { text: "3", why: "+= erstatter ikke værdien - den lægger til. likes = 3 ville have givet 3." },
+                            { text: "8", correct: true, why: "likes += 3 betyder likes = likes + 3. Så 5 + 3 = 8 bliver gemt i likes." },
+                            { text: "5", why: "+= ændrer variablen, så likes er ikke længere 5." },
+                        ],
+                    },
+
+                ]
+            }
         ]
     },
     {
@@ -493,7 +610,40 @@ export const modules = [
                     if (!output.includes("Adgang givet")) return "Dit program virker - det afviser forkerte kodeord. Kør det igen og skriv det rigtige kodeord for at komme ind.";
                     return true;
                 },
-            }
+            },
+            {
+                id: "5.6",
+                title: "Quiz",
+                type: "quiz",
+                questions: [
+                    {
+                        question: "Hvilken af disse linjer spørger, om age er lig med 18?",
+                        options: [
+                            { text: "if age = 18:", why: 'Et lighedstegn gemmer noget i en variabel, det kan man ikke spørge med. Python giver en fejl.' },
+                            { text: "if age == 18:", correct: true, why: 'To lighedstegn spørger "er de ens?". Huskeregel: når du spørger om noget, skal du bruge to.' },
+                            { text: "if age != 18:", why: '!= betyder "ikke lig med", den spørger altså om det modsatte.' },
+                        ],
+                    },
+                    {
+                        question: "Hvad udskriver denne kode?",
+                        code: 'age = 17\n\nif age >= 18:\n    print("Voksen")\nelif age == 17:\n    print("Næsten voksen")\nelse:\n    print("Barn")',
+                        options: [
+                            { text: "Voksen", why: "17 er ikke større end eller lig med 18, så den første betingelse er falsk." },
+                            { text: "Næsten voksen og Barn", why: "Python stopper ved den første betingelse, der er sand. else kører kun, hvis ingen af de andre var sande." },
+                            { text: "Næsten voksen", correct: true, why: "age >= 18 er falsk, men age == 17 er sand, så Python kører den blok og springer resten over." },
+                        ],
+                    },
+                    {
+                        question: "Hvad udskriver denne kode?",
+                        code: 'PASSWORD = "Python123"\nguess = "python123"\n\nif guess == PASSWORD:\n    print("Adgang givet")\nelse:\n    print("Forkert kodeord")',
+                        options: [
+                            { text: "Forkert kodeord", correct: true, why: "Store og små bogstaver tæller: python123 med lille p er ikke det samme som Python123." },
+                            { text: "Adgang givet", why: 'Kig godt efter: guess starter med et lille p, men PASSWORD med et stort P. For Python er de forskellige.' },
+                            { text: "Fejl", why: "Det er helt fint at sammenligne tekst med == - det giver bare ikke True her." },
+                        ],
+                    },
+                ],
+            },
         ]
     },
     {
@@ -580,6 +730,40 @@ export const modules = [
                         ?? await expectOutput(run, fixed, ["7"], { when: "når man gætter for højt", shows: "lavere", notShows: ["højere", "rigtigt"], endsWith: "5" })
                         ?? true;
                 },
+            },
+            {
+                id: "6.4",
+                title: "Quiz",
+                type: "quiz",
+                questions: [
+                    {
+                        question: "Hvilke tal kan random.randint(1, 8) give?",
+                        options: [
+                            { text: "1, 2, 3, 4, 5, 6, 7", why: "randint tager begge tal med, både 1 og 8 kan komme." },
+                            { text: "1, 2, 3, 4, 5, 6, 7, 8", correct: true, why: "randint(a, b) giver et tal fra a til b, og begge tal kan komme, Lige som en rigtig terning. " },
+                            { text: "0, 1, 2, 3, 4, 5, 6, 7, 8", why: "randint starter ved det første tal du skriver, her 1, og ikke 0." },
+                        ]
+                    },
+                    {
+                        question: "Brugeren skriver 5. Hvad udskriver programme?",
+                        code: 'number = 5\nguess = input("Gæt et tal: ")\n\nif guess == number:\n    print("Rigtigt")\nelse:\n    print("Forkert")',
+                        options: [
+                            { text: "Rigtigt", why: 'Det ligner det samme, men input() giver teksten "5", og teksten "5" er ikke det samme som tallet 5.' },
+                            { text: "Fejl", why: "Python giver ikke en fejl, den siger bare, at de ikke er ens." },
+                            { text: "Forkert", correct: true, why: 'input() giver altid tekst. "5" og 5 er forskellige datatyper (str og int), så de er ikke ens. Brug int(input(...)).' },
+                        ]
+                    },
+                    {
+                        question: "Hvad udskriver denne kode?",
+                        code: 'number = 5\nguess = 8\n\nif guess == number:\n    print("Du gættede rigtigt")\nelif guess < number:\n    print("Tallet er højere")\nelse:\n    print("Tallet er lavere")',
+                        options: [
+                            { text: "Tallet er lavere", correct: true, why: "8 er ikke lig med 5, og 8 er ikke mindre end 5 - så else kører. Gættet var for højt, så tallet er lavere." },
+                            { text: "Tallet er højere", why: "Gættet (8) er højere end tallet (5) - så det hemmelige tal er lavere." },
+                            { text: "Du gættede rigtigt", why: "8 er ikke lig med 5." },
+                        ],
+                    },
+
+                ]
             }
         ]
     },
@@ -727,6 +911,39 @@ export const modules = [
                     if (!output.includes("rigtigt")) return "Dit program virker. Kør det igen, og spil til du vinder.";
                     return true;
                 },
+            },
+            {
+                id: "7.7",
+                title: "Quiz",
+                type: "quiz",
+                questions: [
+                    {
+                        question: "Hvilke tal giver range(1, 5)?",
+                        options: [
+                            { text: "1, 2, 3, 4 og 5", why: "I range() er stop-tallet ikke med - modsat randint(1, 5), hvor 5 godt kan komme." },
+                            { text: "0, 1, 2, 3 og 4", why: "range() starter ved det første tal, du skriver - her 1. Kun range(5) starter ved 0." },
+                            { text: "1, 2, 3 og 4", correct: true, why: "range(1, 5) starter ved 1 og stopper lige før 5. Vil du have 5 med, skal der stå range(1, 6)." },
+                        ],
+                    },
+                    {
+                        question: "Hvad udskriver denne kode?",
+                        code: 'for i in range(3):\n    print("Hej")\nprint("Færdig")',
+                        options: [
+                            { text: "Hej, Hej, Hej og så Færdig", correct: true, why: 'Kun den indrykkede linje bliver gentaget. print("Færdig") er ikke rykket ind, så den kører én gang, når løkken er færdig.' },
+                            { text: "Hej, Færdig - tre gange", why: 'print("Færdig") er ikke rykket ind, så den hører ikke til løkken. Den kører kun én gang - til sidst.' },
+                            { text: "Hej og Færdig", why: 'range(3) får løkken til at køre tre gange, så "Hej" bliver skrevet tre gange.' },
+                        ],
+                    },
+                    {
+                        question: "Hvad sker der, når man kører denne kode?",
+                        code: "count = 3\n\nwhile count > 0:\n    print(count)",
+                        options: [
+                            { text: "Den skriver 3, 2 og 1", why: "count bliver aldrig mindre - der mangler count -= 1 inde i løkken." },
+                            { text: "Den skriver 3 igen og igen - for evigt", correct: true, why: "count er altid 3, så count > 0 er altid sand. Det er en uendelig løkke - kurset stopper den efter 5 sekunder." },
+                            { text: "Den skriver ingenting", why: "count er 3 fra starten, så count > 0 er sand, og løkken kører." },
+                        ],
+                    },
+                ],
             },
         ]
     }

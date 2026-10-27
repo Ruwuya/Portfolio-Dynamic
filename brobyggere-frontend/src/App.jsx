@@ -6,6 +6,7 @@ import { loadProgress, updateProgress, clearProgress } from "./storage.js";
 
 import Sidebar from "./components/Sidebar.jsx";
 import TaskPage from "./components/TaskPage.jsx";
+import QuizPage from "./components/QuizPage.jsx";
 
 // "#2.1" → "2.1"
 function idFromHash() {
@@ -102,7 +103,12 @@ export default function App() {
         />
 
         <main className="content">
-          <TaskPage key={page.id} task={page} solved={solvedIds.includes(page.id)} onSolved={markSolved} />
+          {/* Quizzes get their own page - they have no code to run */}
+          {page.type === "quiz" ? (
+            <QuizPage key={page.id} task={page} onSolved={markSolved} />
+          ) : (
+            <TaskPage key={page.id} task={page} solved={solvedIds.includes(page.id)} onSolved={markSolved} />
+          )}
 
           {onPlayground ? (
             <nav className="pager">
