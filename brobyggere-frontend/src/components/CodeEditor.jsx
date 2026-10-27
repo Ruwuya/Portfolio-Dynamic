@@ -1,10 +1,12 @@
 import { useRef } from "react";
+import { tokenize } from "../highlight.js";
 
 const INDENT = "    "; // 4 spaces
 
 export default function CodeEditor({ value, onChange, onRun }) {
     const ref = useRef(null);         // the <textarea> element itself
     const escPressed = useRef(false); // was Esc pressed just now?
+    const highlightRef = useRef(null); // the coloured <pre> behind the textarea
 
     // Inserts text at the cursor. execCommand keeps Ctrl+Z working.
     function insert(text) {
@@ -82,22 +84,38 @@ export default function CodeEditor({ value, onChange, onRun }) {
         }
     }
 
+    // When the textarea scrolls, the coloured copy behind it must scroll the same amount
+    function syncScroll() {
+        highlightRef.current.scrollTop = ref.current.scrollTop;
+        highlightRef.current.scrollLeft = ref.current.scrollLeft;
+    }
+
     const lineCount = value.split("\n").length;
 
     return (
-        <textarea
-            ref={ref}
-            className="code-editor"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            onKeyDown={handleKeyDown}
-            rows={Math.max(8, lineCount + 1)}
-            spellCheck={false}
-            autoCapitalize="off"
-            autoComplete="off"
-            autoCorrect="off"
-            wrap="off"
-            aria-label="Kodefelt. Tryk Esc og derefter Tab for at forlade feltet."
-        />
+        <div className="code-editor-wrap">
+            <pre ref={highlightRef} className="code-highlight" aria-hidden="true">
+                {tokenize(value).map((token, i) => (
+                    <span key={i} className={`tok-${token.type}`}>{token.text}</span>
+                ))}
+                {/* An extra line break, so an empty last line has height too */}
+                {"\n"}
+            </pre>
+            <textarea
+                ref={ref}
+                className="code-editor"
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onScroll={syncScroll}
+                rows={Math.max(8, lineCount + 1)}
+                spellCheck={false}
+                autoCapitalize="off"
+                autoComplete="off"
+                autoCorrect="off"
+                wrap="off"
+                aria-label="Kodefelt. Tryk Esc og derefter Tab for at forlade feltet."
+            />
+        </div>
     );
 }

@@ -248,19 +248,46 @@ code, pre {
 }
 
 /* ---------- Code editor ---------- */
-.code-editor {
-  display: block;
-  width: 100%;
-  padding: 0.9rem 1rem;
-  border: 2px solid var(--dark);
+/* The editor: a coloured <pre> behind an invisible <textarea>.
+   They MUST have exactly the same font, size, padding and border - otherwise the colours drift away from the cursor. */
+.code-editor-wrap {
+  position: relative;
   border-radius: var(--radius);
   background: var(--dark);
-  color: var(--lighter);
-  caret-color: var(--light);
+}
+
+.code-editor,
+.code-highlight {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius);
   font-family: var(--mono);
   font-size: 16px; /* 16px stops iPhones zooming in */
+  font-variant-ligatures: none;
   line-height: 1.5;
+  letter-spacing: normal;
   tab-size: 4;
+  white-space: pre;
+}
+
+.code-highlight {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none; /* clicks go through to the textarea */
+  color: var(--lighter);
+}
+
+.code-editor {
+  position: relative; /* on top of the <pre> */
+  border-color: var(--dark);
+  background: transparent;
+  color: transparent;
+  -webkit-text-fill-color: transparent; /* Safari */
+  caret-color: var(--light);
   resize: vertical;
 }
 
@@ -270,9 +297,16 @@ code, pre {
 }
 
 .code-editor::selection {
-  background: var(--accent);
-  color: var(--dark);
+  background: rgba(148, 137, 121, 0.45);
 }
+
+/* Colours for the different kinds of code (all checked for contrast on the dark background) */
+.tok-keyword  { color: #F2A97E; }
+.tok-builtin  { color: #8CC4E8; }
+.tok-string   { color: #A9D39A; }
+.tok-number   { color: #D4A5E6; }
+.tok-constant { color: #F0D27A; }
+.tok-comment  { color: #A39C8E; font-style: italic; }
 
 /* ---------- Output ---------- */
 .output-label {
