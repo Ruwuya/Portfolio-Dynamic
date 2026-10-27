@@ -5,6 +5,7 @@ import { loadProgress, updateProgress } from "../storage.js";
 import { mentions67, randomRoast } from "../easterEgg.js";
 import CodeEditor from "./CodeEditor.jsx";
 import InputBox from "./InputBox.jsx";
+import CodeBlock from "./CodeBlock.jsx";
 
 export default function TaskPage({ task, solved, onSolved }) {
     const [code, setCode] = useState(() => loadProgress().code?.[task.id] ?? task.starter);
@@ -191,7 +192,7 @@ export default function TaskPage({ task, solved, onSolved }) {
                 {canSeeSolution ? (
                     <details className="solution">
                         <summary>Se løsning</summary>
-                        <pre>{task.solution}</pre>
+                        <CodeBlock code={task.solution} />
                     </details>
                 ) : (
                     <button className="btn btn-secondary" disabled>

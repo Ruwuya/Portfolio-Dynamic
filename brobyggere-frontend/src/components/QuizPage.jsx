@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CodeBlock from "./CodeBlock.jsx";
 
 // A quiz: a few multiple-choice questions at the end of a module.
 // A wrong answer explains why, and the student can just pick again - no score, no fail state.
@@ -28,7 +29,7 @@ export default function QuizPage({ task, onSolved }) {
                 return (
                     <div key={qi} className="quiz-question">
                         <p className="quiz-q"><strong>{qi + 1}. {question.question}</strong></p>
-                        {question.code && <pre className="quiz-code">{question.code}</pre>}
+                        {question.code && <CodeBlock className="quiz-code" code={question.code} />}
 
                         <div className="quiz-options">
                             {question.options.map((option, oi) => {
