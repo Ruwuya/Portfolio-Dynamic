@@ -17,18 +17,22 @@ The Python code runs in the pupil's own browser with [Pyodide](https://pyodide.o
 | 5 | If-sætninger (`if`/`elif`/`else`, constants, `=` vs `==`, a password check) | 5 + quiz |
 | 6 | Tilfældige tal (`random`, a guessing game with one guess) | 3 + quiz |
 | 7 | Løkker (`for`, `range`, `while`, the finished guessing game) | 6 + quiz |
+| 8 | Lister (lists, indexes from 0, `append`, `len`, looping over a list, a shopping list) | 5 + quiz |
+| 9 | Små projekter (bonus): rock-paper-scissors, your own quiz with points, a calculator | 3 projects |
 | – | Legeplads: a free editor with no task or check | – |
 
 Modules 1–4 take about an hour. The rest is for longer days or quick pupils.
 
 Every task has a short explanation, a code editor with a Kør button, an automatic check, hints shown one at a time, a solution that unlocks after two failed tries, and a "Godt at vide" box once the task is solved.
 
+The projects in module 9 have less starter code and more lenient checks: they test that the program works, not how it is written, since there are many right solutions. In "Din egen quiz" the pupils write their own questions, and the check finds their answers in the code and tests the quiz with them.
+
 ## Features
 
 - **Real Python in the browser.** Pyodide (CPython compiled to WebAssembly) runs in a Web Worker.
 - **`input()` works.** The program's question appears at the bottom of the output with an answer field underneath, like a terminal.
 - **Infinite loops are stopped** after 5 seconds with a friendly message, instead of freezing the page.
-- **Python's errors explained in Danish**, with the line number. This covers e.g. missing quotation marks, a missing colon, indentation, `=` instead of `==`, invalid variable names, `x` used as multiplication, and text + number.
+- **Python's errors explained in Danish**, with the line number. This covers e.g. missing quotation marks, a missing colon, indentation, `=` instead of `==`, invalid variable names, `x` used as multiplication, text + number, and a list index that doesn't exist.
 - **Automatic checks** that test what the program *does*, not just what the code looks like (see below).
 - **Syntax highlighting** in the editor, the quiz questions and the solutions.
 - **Progress is saved** in the browser (localStorage), so a reload doesn't lose any work. "Start hele kurset forfra" clears everything for the next group.
@@ -73,7 +77,7 @@ src/
   easterEgg.js         A small surprise for anyone who writes "67"
   components/
     TaskPage.jsx       A code task: editor, Kør, output, check, hints, solution
-    QuizPage.jsx       A multiple-choice quiz at the end of each module
+    QuizPage.jsx       A multiple-choice quiz at the end of modules 1-8
     CodeEditor.jsx     The editor with Tab, auto-indent and highlighting
     CodeBlock.jsx      Read-only code with highlighting (quizzes, solutions)
     InputBox.jsx       The answer field for input()
