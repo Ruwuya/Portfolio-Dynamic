@@ -1074,6 +1074,39 @@ export const modules = [
                     return true;
                 },
             },
+            {
+                id: "8.6",
+                title: "Quiz",
+                type: "quiz",
+                questions: [
+                    {
+                        question: "Hvilket element har nummer 0 i en liste?",
+                        options: [
+                            { text: "Det andet", why: "Lister starter med at tælle fra 0, så det andet element har nummer 1." },
+                            { text: "Det første", correct: true, why: "Lister starter med at tælle fra 0. En liste med 3 elementer har nummer 0, 1 og 2." },
+                            { text: "Det sidste", why: "Nummer 0 er altid det første. Det sidste element kan du hente med -1, fx fruits[-1]." },
+                        ],
+                    },
+                    {
+                        question: "Hvad udskriver denne kode?",
+                        code: 'fruits = ["æble", "banan"]\nfruits.append("kiwi")\nprint(fruits)',
+                        options: [
+                            { text: "['kiwi', 'æble', 'banan']", why: "append() sætter elementet ind sidst i listen - ikke først." },
+                            { text: "['æble', 'banan']", why: "append() ændrer listen direkte, så kiwi kommer med." },
+                            { text: "['æble', 'banan', 'kiwi']", correct: true, why: "append() sætter kiwi ind sidst i listen." },
+                        ],
+                    },
+                    {
+                        question: "Brugeren skriver mælk og så færdig. Hvad udskriver programmet?",
+                        code: 'shopping = []\nitem = ""\n\nwhile item != "færdig":\n    item = input("Hvad skal på listen? ")\n    shopping.append(item)\n\nprint(shopping)',
+                        options: [
+                            { text: "['mælk', 'færdig']", correct: true, why: 'Der mangler en if-linje. "færdig" bliver tilføjet, før while-linjen opdager, at løkken skal stoppe.' },
+                            { text: "['mælk']", why: 'append() kører, før while-linjen tjekker igen - så "færdig" når at komme med på listen, inden løkken stopper.' },
+                            { text: "[]", why: "append() kører hver gang løkken kører, så mælk kommer med på listen." },
+                        ],
+                    },
+                ],
+            }
         ]
     }
 ];
