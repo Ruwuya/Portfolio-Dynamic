@@ -1108,6 +1108,112 @@ export const modules = [
                 ],
             }
         ]
+    },
+    {
+        id: 9,
+        title: "Små projekter",
+        minutes: 60,
+        bonus: true,
+        tasks: [
+            {
+                id: "9.1",
+                title: "Sten, saks, papir",
+                text: 'Lav et spil, hvor du spiller mod computeren. Computeren vælger et tal med random.randint(1, 3): 1 = sten, 2 = saks, 3 = papir. Du vælger med input(). Sammenlign så de to valg: er de ens, er det uafgjort. Sten slår saks, saks slår papir, og papir slår sten. Skriv "Uafgjort", "Du vinder" eller "Computeren vinder". Du får brug for and, som betyder, at begge dele skal være sande: if user_choice == 1 and computer_choice == 2:',
+                starter: 'import random\n\n# Computerens valg: 1 = sten, 2 = saks, 3 = papir\ncomputer_choice = random.randint(1, 3)\n\n# Spørg brugeren om deres valg\nuser_choice = int(input("Vælg sten (1), saks (2) eller papir (3): "))\nprint("Computeren valgte", computer_choice)\n\n# Sammenlign valgene og udskriv resultatet:\n# Ens valg er uafgjort. Sten slår saks, saks slår papir, og papir slår sten.\n',
+                solution: 'import random\n\n# Computerens valg: 1 = sten, 2 = saks, 3 = papir\ncomputer_choice = random.randint(1, 3)\n\n# Spørg brugeren om deres valg\nuser_choice = int(input("Vælg sten (1), saks (2) eller papir (3): "))\nprint("Computeren valgte", computer_choice)\n\n# Sammenlign valgene og udskriv resultatet:\n# Ens valg er uafgjort. Sten slår saks, saks slår papir, og papir slår sten.\nif user_choice == computer_choice:\n    print("Uafgjort")\nelif user_choice == 1 and computer_choice == 2:\n    print("Du vinder")\nelif user_choice == 2 and computer_choice == 3:\n    print("Du vinder")\nelif user_choice == 3 and computer_choice == 1:\n    print("Du vinder")\nelse:\n    print("Computeren vinder")',
+                goodToKnow: 'and betyder, at begge dele skal være sande. Der findes også or, som betyder, at mindst én af dem skal være sand - så kunne du samle de tre "Du vinder"-linjer i én. Prøv at udvide spillet, så man spiller bedst ud af tre.',
+                hints: [
+                    'Start med uafgjort: if user_choice == computer_choice: print("Uafgjort")',
+                    'Lav en elif for hver måde, du kan vinde på, fx elif user_choice == 1 and computer_choice == 2: print("Du vinder"). Alt andet er else: print("Computeren vinder")',
+                ],
+                check: async (output, code, { run }) => {
+                    if (!/random\.randint\(\s*1\s*,\s*3\s*\)/.test(code)) return "Lad computerens valg være random.randint(1, 3).";
+                    if (!/int\s*\(\s*input\s*\(/.test(code)) return "Lav brugerens valg om til et tal med int(input(...)).";
+
+                    // Play all 9 combinations, with the computer's choice locked to a fixed number
+                    const names = { 1: "sten", 2: "saks", 3: "papir" };
+                    const beats = { 1: 2, 2: 3, 3: 1 }; // sten slår saks, saks slår papir, papir slår sten
+                    for (const user of [1, 2, 3]) {
+                        for (const computer of [1, 2, 3]) {
+                            const fixed = code.replace(/random\.randint\(\s*1\s*,\s*3\s*\)/, String(computer));
+                            const when = `når du vælger ${names[user]} og computeren ${names[computer]}`;
+                            let expected;
+                            if (user === computer) expected = { shows: "Uafgjort", notShows: ["Du vinder", "Computeren vinder"] };
+                            else if (beats[user] === computer) expected = { shows: "Du vinder", notShows: ["Uafgjort", "Computeren vinder"] };
+                            else expected = { shows: "Computeren vinder", notShows: ["Uafgjort", "Du vinder"] };
+                            const problem = await expectOutput(run, fixed, [String(user)], { when, ...expected });
+                            if (problem) return problem;
+                        }
+                    }
+                    return true;
+                },
+            },
+            {
+                id: "9.2",
+                title: "Din egen quiz",
+                text: 'Lav din egen quiz med tre spørgsmål om lige, hvad du vil - fodbold, spil, musik eller din by. Variablen points starter på 0. For hvert spørgsmål spørger du med input(), og tjekker svaret med if. Er svaret rigtigt, skriver programmet "Rigtigt" og lægger 1 til points. Ellers skriver det "Forkert" og det rigtige svar. Til sidst skriver programmet, hvor mange point man fik. Spørgsmål 1 er et eksempel, som du gerne må ændre.',
+                starter: 'points = 0\n\n# Spørgsmål 1 - et eksempel, som du gerne må ændre\nanswer = input("Hvad er hovedstaden i Danmark? ")\nif answer == "København":\n    print("Rigtigt")\n    points += 1\nelse:\n    print("Forkert - det er København")\n\n# Spørgsmål 2 - skriv dit eget herunder, på samme måde\n\n# Spørgsmål 3\n\n# Til sidst: skriv, hvor mange point man fik\n',
+                solution: 'points = 0\n\n# Spørgsmål 1 - et eksempel, som du gerne må ændre\nanswer = input("Hvad er hovedstaden i Danmark? ")\nif answer == "København":\n    print("Rigtigt")\n    points += 1\nelse:\n    print("Forkert - det er København")\n\n# Spørgsmål 2 - skriv dit eget herunder, på samme måde\nanswer = input("Hvor mange ben har en edderkop? ")\nif answer == "8":\n    print("Rigtigt")\n    points += 1\nelse:\n    print("Forkert - den har 8")\n\n# Spørgsmål 3\nanswer = input("Hvad hedder Pythons funktion til at skrive på skærmen? ")\nif answer == "print":\n    print("Rigtigt")\n    points += 1\nelse:\n    print("Forkert - det er print")\n\n# Til sidst: skriv, hvor mange point man fik\nprint("Du fik", points, "ud af 3 point")',
+                goodToKnow: 'Svaret skal skrives præcis rigtigt: "københavn" med lille k er ikke det samme som "København" - ligesom med Python123. Vil du være mere venlig, kan du skrive answer.lower() == "københavn". lower() laver alle bogstaver små, så det er lige meget, hvordan man staver det. Få en ven til at prøve din quiz.',
+                hints: [
+                    "Kopiér spørgsmål 1 og ret teksten i input() og svaret i if-linjen. Husk at rykke linjerne under if og else ind.",
+                    'Til sidst (ikke rykket ind): print("Du fik", points, "ud af 3 point")',
+                ],
+                check: async (output, code, { run }) => {
+                    const src = code.replace(/#.*$/gm, ""); // ignore comments
+                    if ((src.match(/input\s*\(/g) || []).length < 3) return "Lav tre spørgsmål - ét input() for hvert.";
+                    if (!/^\s*points\s*=\s*0\s*$/m.test(src)) return "Start med points = 0 øverst.";
+                    if (!/points\s*\+=\s*1|points\s*=\s*points\s*\+\s*1/.test(src)) return "Læg 1 til points, når svaret er rigtigt: points += 1";
+                    // input() always gives text, so a number without quotation marks never matches
+                    if (/if\s+\w+\s*==\s*\d+\s*:/.test(src)) return 'input() giver altid tekst. Skriv tal-svar i anførselstegn: if answer == "8":';
+
+                    // Find the student's own right answers: if answer == "..."
+                    const answers = [...src.matchAll(/if\s+\w+\s*==\s*["']([^"'\n]*)["']\s*:/g)].map((m) => m[1]);
+                    if (answers.length < 3) return 'Hvert spørgsmål skal have sin egen if med det rigtige svar, fx if answer == "8":';
+                    const total = answers.length;
+                    if (!/print\([^)\n]*points/.test(src)) return 'Skriv til sidst, hvor mange point man fik: print("Du fik", points, "ud af 3 point")';
+
+                    // All wrong: the score must be 0
+                    const wrong = await run(code, answers.map(() => "noget helt forkert"));
+                    if (wrong.timeout || wrong.error) return "Programmet giver en fejl, når man svarer forkert på alle spørgsmål.";
+                    if (!/\b0\b/.test(lines(wrong.output).at(-1) || "")) return "Når man svarer forkert på alt, skal den sidste linje vise 0 point. Står points += 1 et forkert sted - fx under else?";
+
+                    // All right, using the student's own answers: full score
+                    const right = await run(code, answers);
+                    if (right.timeout || right.error) return "Programmet giver en fejl, når man svarer rigtigt på alle spørgsmål.";
+                    const last = lines(right.output).at(-1) || "";
+                    if (!new RegExp(`\\b${total}\\b`).test(last) || /\b0\b/.test(last)) return `Når man svarer rigtigt på alt (${answers.join(", ")}), skal den sidste linje vise ${total} point. Husk points += 1 under hver if - og at udskrive points til sidst.`;
+                    return true;
+                },
+            },
+            {
+                id: "9.3",
+                title: "Lommeregner",
+                text: 'Lav en lommeregner, der spørger om to tal og et regnetegn (+, -, * eller /). Spørgsmålene er der allerede. Tjek så regnetegnet med if og elif - et for hvert regnetegn - og udskriv resultatet. Skriver man noget andet, kan programmet skrive "Ugyldigt regnetegn".',
+                starter: '# Spørg om to tal og et regnetegn\nnum1 = float(input("Skriv det første tal: "))\nnum2 = float(input("Skriv det andet tal: "))\noperator = input("Skriv et regnetegn (+, -, * eller /): ")\n\n# Tjek regnetegnet med if og elif, og udskriv resultatet\n# Start med plus - og lav så en elif for hvert af de andre regnetegn\n',
+                solution: '# Spørg om to tal og et regnetegn\nnum1 = float(input("Skriv det første tal: "))\nnum2 = float(input("Skriv det andet tal: "))\noperator = input("Skriv et regnetegn (+, -, * eller /): ")\n\n# Tjek regnetegnet med if og elif, og udskriv resultatet\n# Start med plus - og lav så en elif for hvert af de andre regnetegn\nif operator == "+":\n    print(num1 + num2)\nelif operator == "-":\n    print(num1 - num2)\nelif operator == "*":\n    print(num1 * num2)\nelif operator == "/":\n    print(num1 / num2)\nelse:\n    print("Ugyldigt regnetegn")',
+                goodToKnow: 'float() laver tekst om til et kommatal, så man også kan regne med fx 2.5. Derfor står der 9.0 og ikke 9 - det er stadig det samme tal. Prøv at dividere med 0 - hvad sker der? Det kan du forhindre med endnu en if.',
+                hints: [
+                    'Start med plus: if operator == "+": og på linjen under (rykket ind) print(num1 + num2)',
+                    'Lav en elif for hvert af de andre regnetegn, fx elif operator == "-": og print(num1 - num2). Til sidst else: print("Ugyldigt regnetegn")',
+                ],
+                check: async (output, code, { run }) => {
+                    if (!/float\s*\(\s*input\s*\(/.test(code)) return "Lav de to tal om til tal med float(input(...)).";
+
+                    // Test each operation with 6 and 3 - checks what the program does, however it is written
+                    const tests = [["+", 9], ["-", 3], ["*", 18], ["/", 2]];
+                    for (const [op, expected] of tests) {
+                        const result = await run(code, ["6", "3", op]);
+                        if (result.error || result.timeout) return `Programmet giver en fejl, når man regner 6 ${op} 3.`;
+                        const last = lines(result.output).at(-1) || "";
+                        // If the last line is still the question, nothing was printed for this sign
+                        if (last.includes(":") && last.endsWith(op)) return `Programmet skriver ingenting, når man regner 6 ${op} 3. Mangler der en if eller elif for ${op}?`;
+                        if (parseFloat(last.split(" ").at(-1)) !== expected) return `6 ${op} 3 skal give ${expected}, men programmet skriver: ${last}`;
+                    }
+                    return true;
+                },
+            }
+        ]
     }
 ];
 
