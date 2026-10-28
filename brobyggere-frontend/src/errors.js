@@ -117,6 +117,10 @@ export function explainError(errorText) {
         return result("Det er ikke et helt tal",
             "int() kan kun lave tekst om til et tal, hvis teksten er et helt tal, fx \"16\" - ikke \"seksten\" eller \"16.5\".");
     }
+    if (type === "IndexError" && message.includes("list index out of range")) {
+        return result("Listen er ikke så lang",
+            "Du prøver at hente et element, der ikke findes. Husk, at det første element har nummer 0 - så en liste med 3 elementer har nummer 0, 1 og 2.");
+    }
     if (type === "ZeroDivisionError") {
         return result("Division med 0", "Man kan ikke dividere med 0 - heller ikke i Python.");
     }

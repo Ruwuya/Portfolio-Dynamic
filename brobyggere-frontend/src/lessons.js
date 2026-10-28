@@ -946,6 +946,135 @@ export const modules = [
                 ],
             },
         ]
+    },
+    {
+        id: 8,
+        title: "Lister",
+        minutes: 30,
+        bonus: false,
+        tasks: [
+            {
+                id: "8.1",
+                title: "Din første liste",
+                text: 'En liste gemmer mange ting i én variabel. Tingene står mellem firkantede parenteser [ ] og er adskilt af kommaer. Kør koden og se listen. Tilføj så din egen yndlingsfrugt som det fjerde element i listen, og kør igen.',
+                starter: '# En liste står mellem firkantede parenteser, med komma mellem elementerne\n# Tilføj din egen yndlingsfrugt som det fjerde element\nfruits = ["æble", "banan", "pære"]\n\n# Udskriv hele listen\nprint(fruits)',
+                solution: '# En liste står mellem firkantede parenteser, med komma mellem elementerne\n# Tilføj din egen yndlingsfrugt som det fjerde element\nfruits = ["æble", "banan", "pære", "kiwi"]\n\n# Udskriv hele listen\nprint(fruits)',
+                goodToKnow: 'Når Python udskriver en liste, viser den firkantede parenteser og enkelte anførselstegn: [\'æble\', \'banan\']. Det betyder det samme som " - Python foretrækker bare \' når den viser tekst. En liste kan indeholde både tekst og tal.',
+                hints: [
+                    'Hvert element står i anførselstegn, og der skal være et komma mellem dem: "pære", "kiwi"',
+                    'Tilføj din frugt før den sidste ]: fruits = ["æble", "banan", "pære", "kiwi"]',
+                ],
+                check: (output, code) => {
+                    if (!/fruits\s*=\s*\[/.test(code)) return "Lav listen med firkantede parenteser: fruits = [ ... ]";
+                    if (!/print\(\s*fruits\s*\)/.test(code)) return "Udskriv listen med print(fruits).";
+                    // Two texts next to each other without a comma ("pære" "kiwi") silently become one text in Python
+                    if (/["']\s+["']/.test(code.replace(/#.*$/gm, ""))) return 'Der mangler et komma mellem to elementer. Uden komma klistrer Python teksterne sammen til én: "pære" "kiwi" bliver til "pærekiwi".';
+                    // Count the items in the printed list: each one is shown as '...'
+                    const items = (lines(output).at(-1) || "").match(/'[^']*'/g) || [];
+                    if (items.length < 4) return `Listen har ${items.length} elementer. Tilføj din egen frugt, så der er 4.`;
+                    return true;
+                },
+            },
+            {
+                id: "8.2",
+                title: "Hent et element",
+                text: 'Du kan hente et element fra en liste med firkantede parenteser og et tal. Kør koden. Hvorfor skriver den pære og ikke banan? Det første element har nemlig nummer 0, det næste 1, og så videre. Udskriv så det første element i listen.',
+                starter: 'fruits = ["æble", "banan", "pære"]\n\n# Tallet i de firkantede parenteser vælger et element\n# Elementerne har nummer 0, 1 og 2 - ikke 1, 2 og 3\nprint(fruits[2])\n\n# Udskriv det første element i listen herunder\n',
+                solution: 'fruits = ["æble", "banan", "pære"]\n\n# Tallet i de firkantede parenteser vælger et element\n# Elementerne har nummer 0, 1 og 2 - ikke 1, 2 og 3\nprint(fruits[2])\n\n# Udskriv det første element i listen herunder\nprint(fruits[0])',
+                goodToKnow: 'Det første element har nummer 0. Med negative tal tæller man bagfra: fruits[-1] giver det sidste element, "pære", og fruits[-2] giver "banan".',
+                hints: [
+                    "Lister starter med at tælle fra 0.",
+                    "Det første element er fruits[0], det andet er fruits[1], og så videre."
+                ],
+                check: (output, code) => {
+                    if (!/fruits\s*=\s*\[/.test(code)) return "Lav listen med firkantede parenteser: fruits = [ ... ]";
+                    if (!/fruits\s*\[\s*0\s*\]/.test(code)) return "Hent det første element med fruits[0].";
+                    const out = lines(output);
+                    if (out.length === 0) return "Der kom ikke noget ud. Har du trykket Kør?";
+                    if (out.at(-1) !== "æble") return 'Den sidste linje skal være "æble", som er det første element i listen.';
+                    return true;
+                }
+            },
+            {
+                id: "8.3",
+                title: "Tilføj til listen",
+                text: 'Du kan tilføje et element sidst i en liste med append(). Kør koden og se, at kiwi kommer med. Tilføj så din egen yndlingsfrugt med endnu en fruits.append("...") før print-linjen, og kør igen.',
+                starter: 'fruits = ["æble", "banan", "pære"]\n\n# append() sætter et element ind sidst i listen\nfruits.append("kiwi")\n\n# Tilføj din egen yndlingsfrugt på samme måde herunder\n\n# Udskriv listen - til sidst, så din frugt er med\nprint(fruits)',
+                solution: 'fruits = ["æble", "banan", "pære"]\n\n# append() sætter et element ind sidst i listen\nfruits.append("kiwi")\n\n# Tilføj din egen yndlingsfrugt på samme måde herunder\nfruits.append("mango")\n\n# Udskriv listen - til sidst, så din frugt er med\nprint(fruits)',
+                goodToKnow: 'append() sætter et element ind sidst i listen. Med len() kan du se, hvor mange elementer der er: print(len(fruits)) giver 5. len() virker også på tekst: len("Odense") giver 6, fordi der er 6 bogstaver.',
+                hints: [
+                    'Skriv en ny linje under fruits.append("kiwi"): fruits.append("mango") - med din egen frugt.',
+                    'Linjen med print(fruits) skal stå til sidst, så listen bliver udskrevet, efter din frugt er tilføjet.',
+                ],
+                check: (output, code) => {
+                    if (!/fruits\s*=\s*\[/.test(code)) return "Lav listen med firkantede parenteser: fruits = [ ... ]";
+                    // A classic trap: append changes the list itself and gives back None
+                    if (/fruits\s*=\s*fruits\.append/.test(code)) return 'Skriv bare fruits.append("...") - uden "fruits =" foran. append ændrer listen direkte og giver selv None tilbage.';
+                    if (!/fruits\.append\(/.test(code)) return 'Tilføj et element med fruits.append("...").';
+                    // Look at the last line, in case the list is printed more than once
+                    const last = lines(output).at(-1) || "";
+                    if (last === "None") return 'Programmet skriver None. Skriv bare fruits.append("...") - uden "fruits =" foran.';
+                    if (!last.includes("æble") || !last.includes("banan") || !last.includes("pære")) return "Listen skal stadig indeholde de tre oprindelige frugter.";
+                    const items = last.match(/'[^']*'/g) || [];
+                    if (items.length < 5) return `Listen har ${items.length} elementer. Tilføj din egen frugt med append, så der er 5.`;
+                    return true;
+                }
+            },
+            {
+                id: "8.4",
+                title: "Løkke over en liste",
+                text: 'Du kan bruge en for-løkke til at gå gennem alle elementerne i en liste. Kør koden og se, at den skriver alle frugterne. Lav den så om, så den skriver "Jeg kan godt lide" foran hver frugt.',
+                starter: 'fruits = ["æble", "banan", "pære"]\n\n# fruit får et nyt element fra listen, hver gang løkken kører\nfor fruit in fruits:\n    # Lav linjen herunder om, så den skriver "Jeg kan godt lide" foran frugten\n    print(fruit)',
+                solution: 'fruits = ["æble", "banan", "pære"]\n\n# fruit får et nyt element fra listen, hver gang løkken kører\nfor fruit in fruits:\n    # Lav linjen herunder om, så den skriver "Jeg kan godt lide" foran frugten\n    print("Jeg kan godt lide", fruit)',
+                goodToKnow: 'Variablen i løkken kan hedde, hvad du vil - her hedder den fruit. Den får ét element ad gangen fra listen. Faktisk er for i in range(5) og for fruit in fruits den samme slags løkke: range(5) giver bare tallene 0 til 4 ét ad gangen.',
+                hints: [
+                    'Inde i løkken: print("Jeg kan godt lide", fruit) - med komma mellem teksten og variablen.',
+                    'Variablen fruit skal stå uden for anførselstegnene - ellers skriver Python bare ordet "fruit".',
+                ],
+                check: (output, code) => {
+                    if (!/fruits\s*=\s*\[/.test(code)) return "Lav listen med firkantede parenteser: fruits = [ ... ]";
+                    if (!/for\s+[\p{L}_][\p{L}\p{N}_]*\s+in\s+fruits\s*:/u.test(code)) return "Brug en for-løkke over listen: for fruit in fruits:";
+                    const out = lines(output);
+                    if (out.length < 3) return "Programmet skal skrive alle frugterne - én på hver linje.";
+                    if (!out.every((l) => l.startsWith("Jeg kan godt lide "))) return 'Hver linje skal starte med "Jeg kan godt lide ".';
+                    // Each line must end with the actual fruit - catches print("Jeg kan godt lide fruit")
+                    const expected = ["æble", "banan", "pære"];
+                    if (!expected.every((fruit, i) => (out[i] || "").endsWith(fruit))) return 'Hver linje skal slutte med en frugt. Står fruit inde i anførselstegnene? Så skriver Python bare ordet "fruit".';
+                    return true;
+                },
+            },
+            {
+                id: "8.5",
+                title: "Indkøbsliste",
+                text: 'Lav en indkøbsliste. Programmet bliver ved med at spørge, hvad der skal på listen, indtil man skriver "færdig". Hver ting skal tilføjes til listen med append() - men ikke selve ordet "færdig". Til sidst skal programmet udskrive listen, og hvor mange ting der er på den. Antallet får du med len(shopping), som tæller elementerne i listen.',
+                starter: 'shopping = []  # en tom liste - den bliver fyldt op undervejs\nitem = ""\n\n# Bliv ved, så længe man ikke har skrevet "færdig"\nwhile item != "færdig":\n    item = input("Hvad skal på listen? (skriv færdig for at stoppe) ")\n    # Tilføj item til listen her - men kun hvis det ikke er "færdig"\n\n# Udskriv listen, og hvor mange ting der er på den\n',
+                solution: 'shopping = []  # en tom liste - den bliver fyldt op undervejs\nitem = ""\n\n# Bliv ved, så længe man ikke har skrevet "færdig"\nwhile item != "færdig":\n    item = input("Hvad skal på listen? (skriv færdig for at stoppe) ")\n    # Tilføj item til listen her - men kun hvis det ikke er "færdig"\n    if item != "færdig":\n        shopping.append(item)\n\n# Udskriv listen, og hvor mange ting der er på den\nprint(shopping)\nprint("Du har", len(shopping), "ting på listen")',
+                goodToKnow: '[] er en tom liste. Den er god at starte med, når listen skal fyldes op, mens programmet kører. Uden if-linjen ville ordet "færdig" også komme med på listen - prøv at fjerne den og se.',
+                hints: [
+                    'Inde i løkken, under input-linjen: if item != "færdig": og på linjen under (rykket ind) shopping.append(item).',
+                    'Efter løkken (ikke rykket ind): print(shopping) og print("Du har", len(shopping), "ting på listen")',
+                ],
+                check: async (output, code, { run }) => {
+                    if (!/shopping\.append\(/.test(code)) return "Tilføj hver ting til listen med shopping.append(item).";
+                    if (!/len\(\s*shopping\s*\)/.test(code)) return "Udskriv antallet af ting med len(shopping).";
+
+                    // Test it with a shopping trip: three things, then "færdig"
+                    const trip = await run(code, ["mælk", "brød", "æg", "færdig"]);
+                    if (trip.timeout) return "Programmet kørte i mere end 5 sekunder. Er input() inde i løkken?";
+                    if (trip.error) return "Programmet giver en fejl, når man skriver tre ting og så færdig.";
+                    if (trip.missingInput) return 'Programmet bliver ved med at spørge, selvom man skriver "færdig". Tjek while-linjen: while item != "færdig":';
+                    if (!trip.output.includes("mælk")) return 'Programmet spørger aldrig om noget - løkken kører ikke. Tjek while-linjen: while item != "færdig":';
+                    const out = lines(trip.output);
+                    const listLines = out.filter((l) => l.startsWith("["));
+                    if (listLines.length > 1) return "Listen bliver udskrevet flere gange. print-linjerne er rykket ind, så de kører i løkken - ryk dem ud, så de står efter løkken.";
+                    const listLine = listLines[0] || "";
+                    if (!["mælk", "brød", "æg"].every((thing) => listLine.includes(`'${thing}'`))) return "Når man skriver mælk, brød og æg, skal de alle tre være på listen. Bruger du shopping.append(item) inde i løkken?";
+                    if (listLine.includes("'færdig'")) return 'Ordet "færdig" kommer også med på listen. Tilføj kun item, hvis det ikke er "færdig": if item != "færdig":';
+                    if (!out.some((l) => !l.startsWith("[") && /\b3\b/.test(l))) return "Programmet skal også skrive, hvor mange ting der er på listen - her 3. Brug len(shopping).";
+                    return true;
+                },
+            },
+        ]
     }
 ];
 
